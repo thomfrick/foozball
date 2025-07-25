@@ -76,14 +76,14 @@ class TestPlayerCRUD:
         clean_db.commit()
 
         # Update player
-        player.elo_rating = 1600.0
+        player.trueskill_mu = 30.0
         player.wins = 5
         player.games_played = 8
         clean_db.commit()
 
         # Verify update
         clean_db.refresh(player)
-        assert player.elo_rating == 1600.0
+        assert player.trueskill_mu == 30.0
         assert player.wins == 5
         assert player.games_played == 8
 
@@ -130,9 +130,9 @@ class TestPlayerCRUD:
         """Test operations with multiple players"""
         # Create multiple players
         players = [
-            Player(name="Player 1", elo_rating=1400.0),
-            Player(name="Player 2", elo_rating=1600.0),
-            Player(name="Player 3", elo_rating=1500.0),
+            Player(name="Player 1", trueskill_mu=20.0),
+            Player(name="Player 2", trueskill_mu=30.0),
+            Player(name="Player 3", trueskill_mu=25.0),
         ]
 
         for player in players:
@@ -144,13 +144,13 @@ class TestPlayerCRUD:
         assert len(all_players) == 3
 
         # Query players by rating
-        high_rated = clean_db.query(Player).filter(Player.elo_rating > 1500.0).all()
+        high_rated = clean_db.query(Player).filter(Player.trueskill_mu > 25.0).all()
         assert len(high_rated) == 1
         assert high_rated[0].name == "Player 2"
 
         # Order by rating
         ordered_players = (
-            clean_db.query(Player).order_by(Player.elo_rating.desc()).all()
+            clean_db.query(Player).order_by(Player.trueskill_mu.desc()).all()
         )
         assert ordered_players[0].name == "Player 2"  # Highest rated
         assert ordered_players[-1].name == "Player 1"  # Lowest rated

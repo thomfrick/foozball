@@ -14,8 +14,7 @@ class Player(Base):
     name = Column(String(100), unique=True, index=True, nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=True)
 
-    # Rating systems
-    elo_rating = Column(Float, default=1500.0, nullable=False)
+    # TrueSkill rating system
     trueskill_mu = Column(Float, default=25.0, nullable=False)
     trueskill_sigma = Column(Float, default=8.3333, nullable=False)
 

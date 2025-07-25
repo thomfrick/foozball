@@ -1,4 +1,4 @@
-# Foosball ELO Tracker - API Standards & Documentation
+# Foosball TrueSkill Tracker - API Standards & Documentation
 
 ## API Design Principles
 
@@ -195,7 +195,8 @@ class PlayerUpdate(BaseModel):
 
 class PlayerResponse(PlayerBase):
     id: int
-    elo_rating: float = Field(..., description="Current ELO rating")
+    trueskill_mu: float = Field(..., description="Current TrueSkill skill estimate")
+    trueskill_sigma: float = Field(..., description="Current TrueSkill uncertainty")
     trueskill_mu: float = Field(..., description="TrueSkill mu (skill estimate)")
     trueskill_sigma: float = Field(..., description="TrueSkill sigma (uncertainty)")
     games_played: int = Field(..., description="Total games played")
@@ -271,7 +272,7 @@ class GameListResponse(BaseResponse):
 async def list_players(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
-    sort_by: str = Query("elo_rating", description="Sort field"),
+    sort_by: str = Query("trueskill_mu", description="Sort field"),
     sort_order: str = Query("desc", regex="^(asc|desc)$", description="Sort order"),
     search: Optional[str] = Query(None, description="Search by name"),
     active_only: bool = Query(True, description="Show only active players"),
@@ -282,7 +283,7 @@ async def list_players(
 
     - **page**: Page number (default: 1)
     - **per_page**: Items per page (default: 20, max: 100)
-    - **sort_by**: Sort field (elo_rating, name, games_played, created_at)
+    - **sort_by**: Sort field (trueskill_mu, name, games_played, created_at)
     - **sort_order**: Sort order (asc, desc)
     - **search**: Search players by name
     - **active_only**: Show only active players
@@ -494,7 +495,7 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 
 app = FastAPI(
-    title="Foosball ELO Tracker API",
+    title="Foosball TrueSkill Tracker API",
     description="API for tracking foosball games and player ratings",
     version="1.0.0",
     contact={
@@ -523,9 +524,9 @@ def custom_openapi():
         return app.openapi_schema
 
     openapi_schema = get_openapi(
-        title="Foosball ELO Tracker API",
+        title="Foosball TrueSkill Tracker API",
         version="1.0.0",
-        description="A comprehensive API for tracking foosball games and managing player ratings using ELO and TrueSkill systems.",
+        description="A comprehensive API for tracking foosball games and managing player ratings using the TrueSkill system.",
         routes=app.routes,
     )
 

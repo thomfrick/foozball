@@ -66,12 +66,12 @@ docker-compose --profile dev up frontend-dev
   ```
 
 #### Backend Testing (Local)
-- **All tests**: `python backend/run_tests.py` or `python backend/run_tests.py all`
-- **Unit tests only**: `python backend/run_tests.py unit`
-- **Integration tests**: `python backend/run_tests.py integration`
-- **Coverage report**: `python backend/run_tests.py coverage`
-- **Quick test (stop on first failure)**: `python backend/run_tests.py quick`
-- **Direct pytest**: `uv run --directory backend pytest tests/unit/test_models.py -v`
+- **All tests**: `uv run --directory backend pytest tests/ -v`
+- **Unit tests only**: `uv run --directory backend pytest tests/unit/ -v`
+- **Integration tests**: `uv run --directory backend pytest tests/integration/ -v`
+- **Coverage report**: `uv run --directory backend pytest tests/ --cov=app --cov-report=term-missing`
+- **Quick test (stop on first failure)**: `uv run --directory backend pytest tests/ -x`
+- **Specific test file**: `uv run --directory backend pytest tests/unit/test_models.py -v`
 
 #### Frontend Testing (Local)
 - **Run all tests**: `npm run test:run --prefix frontend`
@@ -82,7 +82,7 @@ docker-compose --profile dev up frontend-dev
 #### Backend
 - **Lint**: `cd backend && uv run ruff check .`
 - **Format**: `cd backend && uv run ruff format .`
-- **Lint check (CI style)**: `python backend/run_tests.py lint`
+- **Lint check (CI style)**: `uv run --directory backend ruff check .`
 
 #### Frontend
 - **Lint**: `npm run lint --prefix frontend`
@@ -102,7 +102,7 @@ docker-compose --profile dev up frontend-dev
 - **Testing**: Vitest + React Testing Library (frontend), pytest (backend)
 - **Package Managers**: uv (backend), npm (frontend)
 - **Migrations**: Alembic for database schema versioning
-- **Rating System**: TrueSkill (with ELO as backup)
+- **Rating System**: TrueSkill
 
 ### Project Structure
 ```
@@ -145,7 +145,7 @@ frontend/
 - **✅ Phase 0.2 Complete**: Frontend Foundation (React + TypeScript + Vite)
 - **✅ Phase 1.1 Complete**: Full Player Management API (CRUD operations)
 - **⏳ Next Phase**: Phase 0.3 Integration Testing or Phase 1.1.F Frontend Player Management
-- **Database**: Players table with ELO/TrueSkill ratings, game statistics
+- **Database**: Players table with TrueSkill ratings, game statistics
 - **API Endpoints**: `/players` CRUD, `/health`, `/ready`, `/docs`
 - **Frontend**: Full routing, API client, health checks, component testing
 - **Test Coverage**: Backend 89%, Frontend 4 tests passing
@@ -189,7 +189,7 @@ SECRET_KEY=dev-secret-key-change-in-production
 3. Run migrations: `uv run --directory backend alembic upgrade head`
 4. Start API: `uv run --project backend uvicorn app.main:app --reload`
 5. Test endpoints: Open http://localhost:8000/docs for Swagger UI
-6. Run tests before committing: `python backend/run_tests.py`
+6. Run tests before committing: `uv run --directory backend pytest tests/ -v`
 
 ### Troubleshooting
 - **Port 8000 in use**: `lsof -i :8000` then `pkill -f uvicorn`

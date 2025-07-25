@@ -5,7 +5,6 @@ export interface Player {
   id: number
   name: string
   email?: string
-  elo_rating: number
   trueskill_mu: number
   trueskill_sigma: number
   games_played: number

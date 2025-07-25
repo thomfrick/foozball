@@ -1,4 +1,4 @@
-# Foosball ELO Tracker - Configuration Management
+# Foosball TrueSkill Tracker - Configuration Management
 
 ## Configuration Strategy
 

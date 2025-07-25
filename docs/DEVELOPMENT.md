@@ -159,12 +159,17 @@ npm run build --prefix frontend
 #### Backend Testing
 ```bash
 # Run all backend tests
-python backend/run_tests.py
+uv run --directory backend pytest tests/ -v
 
 # Run specific test types
-python backend/run_tests.py unit
-python backend/run_tests.py integration
-python backend/run_tests.py coverage
+uv run --directory backend pytest tests/unit/ -v
+uv run --directory backend pytest tests/integration/ -v
+
+# Run with coverage
+uv run --directory backend pytest tests/ --cov=app --cov-report=term-missing
+
+# Stop on first failure
+uv run --directory backend pytest tests/ -x
 ```
 
 #### Frontend Testing

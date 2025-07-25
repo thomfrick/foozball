@@ -1,4 +1,4 @@
-# 🏓 Foosball ELO Tracker
+# 🏓 Foosball TrueSkill Tracker
 
 A modern web application for tracking foosball games and managing player ratings using the TrueSkill rating system.
 

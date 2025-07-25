@@ -14,7 +14,7 @@ class TestHealthEndpoints:
         assert response.status_code == 200
         data = response.json()
 
-        assert data["name"] == "Foosball ELO Tracker"
+        assert data["name"] == "Foosball TrueSkill Tracker"
         assert data["version"] == "1.0.0"
         assert data["status"] == "healthy"
         assert "environment" in data
@@ -58,7 +58,7 @@ class TestAPIDocumentation:
 
         assert "openapi" in schema
         assert "info" in schema
-        assert schema["info"]["title"] == "Foosball ELO Tracker API"
+        assert schema["info"]["title"] == "Foosball TrueSkill Tracker API"
 
     def test_docs_endpoint(self, client: TestClient):
         """Test Swagger UI docs endpoint"""

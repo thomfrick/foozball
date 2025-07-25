@@ -10,7 +10,7 @@ class TestAppConfig:
 
     def test_config_loads_successfully(self):
         """Test that config can be imported and has required fields"""
-        assert config.name == "Foosball ELO Tracker"
+        assert config.name == "Foosball TrueSkill Tracker"
         assert config.version == "1.0.0"
         assert config.environment in ["development", "staging", "production"]
 

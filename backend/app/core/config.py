@@ -24,7 +24,7 @@ class DatabaseConfig(BaseSettings):
 
 class AppConfig(BaseSettings):
     # App Settings
-    name: str = Field(default="Foosball ELO Tracker", env="APP_NAME")
+    name: str = Field(default="Foosball TrueSkill Tracker", env="APP_NAME")
     version: str = Field(default="1.0.0", env="APP_VERSION")
     environment: str = Field(default="development", env="ENVIRONMENT")
     debug: bool = Field(default=False, env="DEBUG")

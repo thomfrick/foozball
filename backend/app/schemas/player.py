@@ -33,7 +33,6 @@ class PlayerResponse(PlayerBase):
     """Schema for player response data"""
 
     id: int
-    elo_rating: float
     trueskill_mu: float
     trueskill_sigma: float
     games_played: int

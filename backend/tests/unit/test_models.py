@@ -12,7 +12,6 @@ class TestPlayerModel:
         player = Player(
             name="Test Player",
             email="test@example.com",
-            elo_rating=1500.0,
             trueskill_mu=25.0,
             trueskill_sigma=8.3333,
             games_played=0,
@@ -23,7 +22,6 @@ class TestPlayerModel:
 
         assert player.name == "Test Player"
         assert player.email == "test@example.com"
-        assert player.elo_rating == 1500.0
         assert player.trueskill_mu == 25.0
         assert player.trueskill_sigma == 8.3333
         assert player.games_played == 0
@@ -67,12 +65,9 @@ class TestPlayerModel:
         """Test player with custom rating values"""
         player = Player(
             name="Custom Player",
-            elo_rating=1800.0,
             trueskill_mu=30.0,
             trueskill_sigma=5.0,
         )
-
-        assert player.elo_rating == 1800.0
         assert player.trueskill_mu == 30.0
         assert player.trueskill_sigma == 5.0
 

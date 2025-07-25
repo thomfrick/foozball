@@ -1,4 +1,4 @@
-# Pre-commit configuration for Foosball ELO Tracker
+# Pre-commit configuration for Foosball TrueSkill Tracker
 # Quality checks for backend (Python) and frontend (TypeScript/React)
 
 repos:

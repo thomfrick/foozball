@@ -1,4 +1,4 @@
-# Foosball ELO Tracker - Database Schema Design
+# Foosball TrueSkill Tracker - Database Schema Design
 
 ## Schema Evolution Strategy
 

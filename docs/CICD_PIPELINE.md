@@ -1,4 +1,4 @@
-# Foosball ELO Tracker - CI/CD Pipeline
+# Foosball TrueSkill Tracker - CI/CD Pipeline
 
 ## Pipeline Strategy
 

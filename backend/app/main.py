@@ -11,7 +11,7 @@ from app.core.config import config
 from app.db.database import get_db
 
 app = FastAPI(
-    title="Foosball ELO Tracker API",
+    title="Foosball TrueSkill Tracker API",
     description="API for tracking foosball games and player ratings",
     version="1.0.0",
     docs_url="/docs",

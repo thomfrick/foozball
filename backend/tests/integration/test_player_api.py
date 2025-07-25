@@ -27,7 +27,6 @@ class TestPlayerAPI:
         data = response.json()
         assert data["name"] == "Test Player"
         assert data["email"] == "test@example.com"
-        assert data["elo_rating"] == 1500.0
         assert data["trueskill_mu"] == 25.0
         assert data["trueskill_sigma"] == 8.3333
         assert data["games_played"] == 0

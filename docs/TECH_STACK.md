@@ -1,4 +1,4 @@
-# Foosball ELO Tracker - Technology Stack
+# Foosball TrueSkill Tracker - Technology Stack
 
 ## Backend Stack (Python)
 
@@ -15,7 +15,7 @@
 ### Data Validation & Serialization
 - **Pydantic** - Data validation and serialization (built into FastAPI)
 
-### ELO Rating System
+### TrueSkill Rating System
 - **python-trueskill** - Microsoft's TrueSkill rating system (superior to basic ELO for multiplayer games)
   - Handles uncertainty in ratings
   - Better for games with multiple players
@@ -43,7 +43,7 @@
 - **React Hook Form** - Performant forms with easy validation
 
 ### Data Visualization
-- **Recharts** - React charting library for ELO progression graphs and statistics
+- **Recharts** - React charting library for TrueSkill progression graphs and statistics
 
 ### Testing
 - **Vitest** - Fast unit testing (Vite-native)
@@ -76,7 +76,7 @@ Frontend (React/TypeScript) → FastAPI Backend → PostgreSQL Database
 - **FastAPI**: Excellent performance, automatic docs, native async support
 - **uv**: 10-100x faster than pip, excellent dependency resolution, built-in virtual environments
 - **PostgreSQL**: ACID compliance, excellent for relational data like games/players
-- **TrueSkill over ELO**: Better handles uncertainty and multiplayer scenarios
+- **TrueSkill**: Better handles uncertainty and multiplayer scenarios compared to ELO
 - **TypeScript**: Prevents runtime errors, better IDE support
 - **TanStack Query**: Handles caching, background updates, optimistic updates
 - **Tailwind**: Rapid prototyping without writing custom CSS

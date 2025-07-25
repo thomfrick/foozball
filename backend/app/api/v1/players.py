@@ -23,11 +23,10 @@ router = APIRouter(prefix="/players", tags=["players"])
 async def create_player(player_data: PlayerCreate, db: Session = Depends(get_db)):
     """Create a new player"""
     try:
-        # Create new player with default ratings
+        # Create new player with default TrueSkill ratings
         db_player = Player(
             name=player_data.name,
             email=player_data.email,
-            elo_rating=1500.0,  # Default ELO rating
             trueskill_mu=25.0,  # Default TrueSkill mu
             trueskill_sigma=8.3333,  # Default TrueSkill sigma
             games_played=0,
@@ -85,8 +84,8 @@ async def list_players(
         if search:
             query = query.filter(Player.name.ilike(f"%{search}%"))
 
-        # Order by ELO rating (highest first)
-        query = query.order_by(Player.elo_rating.desc())
+        # Order by TrueSkill mu (highest skill first)
+        query = query.order_by(Player.trueskill_mu.desc())
 
         # Get total count
         total = query.count()

@@ -2,7 +2,7 @@
   "name": "foosball-frontend",
   "private": true,
   "version": "1.0.0",
-  "description": "Foosball ELO Tracker Frontend - React TypeScript app for tracking foosball games and player ratings",
+  "description": "Foosball TrueSkill Tracker Frontend - React TypeScript app for tracking foosball games and player ratings",
   "type": "module",
   "scripts": {
     "dev": "vite",
