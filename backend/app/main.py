@@ -1,10 +1,12 @@
 # ABOUTME: FastAPI application entry point and configuration
 # ABOUTME: Sets up the main app instance, middleware, and route registration
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
 from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from app.api.v1.router import router as api_v1_router
 from app.core.config import config
 from app.db.database import get_db
 
@@ -25,6 +27,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include API routers
+app.include_router(api_v1_router)
+
 
 @app.get("/")
 async def root():
@@ -41,7 +46,7 @@ async def root():
 async def health_check():
     """Basic health check endpoint"""
     return {
-        "status": "healthy", 
+        "status": "healthy",
         "service": "foosball-api",
         "version": config.version,
         "environment": config.environment
@@ -54,7 +59,7 @@ async def readiness_check(db: Session = Depends(get_db)):
     try:
         # Test database connection
         db.execute(text("SELECT 1"))
-        
+
         return {
             "status": "ready",
             "service": "foosball-api",

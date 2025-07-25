@@ -1,7 +1,7 @@
 # Foosball ELO Tracker - Feature Planning
 
 **Last Updated:** July 25, 2025  
-**Current Status:** Phase 0.1 ✅ COMPLETED | Phase 1 🔄 IN PROGRESS  
+**Current Status:** Phase 0.1 ✅ COMPLETED | Phase 1.1 ✅ COMPLETED | Phase 1.2 🔄 READY  
 **Git Commit:** e2659b1
 
 ## Development Philosophy: Start Small, Build Up
@@ -11,7 +11,7 @@ We'll build this in phases, starting with core functionality and adding features
 ## 📊 Overall Progress
 
 - ✅ **Phase 0.1 Backend Foundation** - 100% Complete (10/10 tasks)
-- 🔄 **Phase 1.1 Player Management** - 40% Complete (4/10 tasks)
+- ✅ **Phase 1.1 Player Management** - 100% Complete (10/10 tasks)
 - ⏳ **Phase 0.2 Frontend Foundation** - 0% Complete (0/7 tasks)
 - ⏳ **Phase 0.3 Integration Testing** - 0% Complete (0/5 tasks)
 
@@ -47,15 +47,15 @@ We'll build this in phases, starting with core functionality and adding features
 
 ## Phase 1: MVP (Minimum Viable Product)
 
-### 1.1 Player Management
+### 1.1 Player Management ✅ COMPLETED (Backend)
 
-#### Backend (1.1.B)
+#### Backend (1.1.B) ✅ COMPLETED
 - [x] 1.1.B.1 Create Player model (id, name, rating, games_played, created_at)
 - [x] 1.1.B.2 Create database migration for players table
-- [ ] 1.1.B.3 Implement POST /players endpoint (create player)
-- [ ] 1.1.B.4 Implement GET /players endpoint (list all players)
-- [ ] 1.1.B.5 Implement GET /players/{id} endpoint (get single player)
-- [ ] 1.1.B.6 Implement DELETE /players/{id} endpoint
+- [x] 1.1.B.3 Implement POST /players endpoint (create player)
+- [x] 1.1.B.4 Implement GET /players endpoint (list all players)
+- [x] 1.1.B.5 Implement GET /players/{id} endpoint (get single player)
+- [x] 1.1.B.6 Implement DELETE /players/{id} endpoint
 - [x] 1.1.B.7 Add validation (unique names, required fields) - implemented in model
 - [x] 1.1.B.8 Write unit tests for player model and database operations
 

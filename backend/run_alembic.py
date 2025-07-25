@@ -3,8 +3,8 @@
 # ABOUTME: Ensures all imports and paths are correctly configured
 
 import os
-import sys
 import subprocess
+import sys
 
 # Add the current directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

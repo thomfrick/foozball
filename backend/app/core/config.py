@@ -1,10 +1,9 @@
 # ABOUTME: Application configuration management using Pydantic Settings
 # ABOUTME: Handles environment variables, database config, and app settings
 
+
 from pydantic import Field
 from pydantic_settings import BaseSettings
-from typing import Optional, List
-import os
 
 
 class DatabaseConfig(BaseSettings):
@@ -32,8 +31,8 @@ class AppConfig(BaseSettings):
 
     # API Settings
     api_prefix: str = Field(default="/api/v1", env="API_PREFIX")
-    allowed_hosts: List[str] = Field(default=["*"], env="ALLOWED_HOSTS")
-    cors_origins: List[str] = Field(
+    allowed_hosts: list[str] = Field(default=["*"], env="ALLOWED_HOSTS")
+    cors_origins: list[str] = Field(
         default=["http://localhost:3000", "http://localhost:5173"], env="CORS_ORIGINS"
     )
 
@@ -54,7 +53,7 @@ class AppConfig(BaseSettings):
     log_format: str = Field(default="json", env="LOG_FORMAT")
 
     # External Services
-    sentry_dsn: Optional[str] = Field(default=None, env="SENTRY_DSN")
+    sentry_dsn: str | None = Field(default=None, env="SENTRY_DSN")
 
     # TrueSkill Settings
     trueskill_mu: float = Field(default=25.0, env="TRUESKILL_MU")
