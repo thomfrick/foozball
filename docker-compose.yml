@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   db:
@@ -20,7 +19,7 @@ services:
       retries: 5
       start_period: 30s
 
-  # Backend service (for later when we want to run full stack)
+  # Backend service (for full stack deployment)
   backend:
     build:
       context: ./backend
@@ -43,6 +42,38 @@ services:
     profiles:
       - full-stack
     command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend service for development
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: foosball_frontend_dev
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    profiles:
+      - full-stack
+      - dev
+    depends_on:
+      - backend
+
+  # Frontend service for production
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: foosball_frontend
+    ports:
+      - "80:80"
+    profiles:
+      - production
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:

@@ -1,0 +1,12 @@
+# Development-specific docker-compose configuration
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  # Override for development environment
+  backend:
+    profiles: []  # Remove profiles to make it default
+
+  frontend-dev:
+    profiles: []  # Remove profiles to make it default
+    environment:
+      - VITE_API_URL=http://backend:8000  # Use backend service name for container networking

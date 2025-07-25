@@ -2,9 +2,9 @@
 
 How to test the current implementation and verify everything is working correctly.
 
-## Quick Validation Test
+## Quick Validation Test (Full Stack)
 
-Run this complete test to verify your setup:
+Run this complete test to verify your full stack setup:
 
 ```bash
 # 1. Start the database
@@ -19,6 +19,7 @@ docker-compose ps | grep healthy
 # 4. Install dependencies if not done
 uv sync --dev --project backend
 uv pip install -e backend
+npm install --prefix frontend
 
 # 5. Run migrations
 uv run --directory backend alembic upgrade head
@@ -26,29 +27,52 @@ uv run --directory backend alembic upgrade head
 # 6. Start API server in background
 uv run --project backend uvicorn app.main:app --host 0.0.0.0 --port 8000 &
 
-# 7. Wait for server to start
-sleep 5
+# 7. Start frontend dev server in background
+npm run dev --prefix frontend &
 
-# 8. Test all endpoints
-echo "Testing root endpoint..."
-curl -s http://localhost:8000/ | grep -q "Foosball ELO Tracker" && echo "✅ Root endpoint works"
+# 8. Wait for servers to start
+sleep 10
 
-echo "Testing health endpoint..."
-curl -s http://localhost:8000/health | grep -q "healthy" && echo "✅ Health endpoint works"
+# 9. Test backend endpoints
+echo "Testing backend endpoints..."
+curl -s http://localhost:8000/ | grep -q "Foosball ELO Tracker" && echo "✅ Backend root endpoint works"
+curl -s http://localhost:8000/health | grep -q "healthy" && echo "✅ Backend health endpoint works"
+curl -s http://localhost:8000/ready | grep -q "ready" && echo "✅ Backend readiness endpoint works"
 
-echo "Testing readiness endpoint..."
-curl -s http://localhost:8000/ready | grep -q "ready" && echo "✅ Readiness endpoint works"
+# 10. Test frontend (basic check)
+echo "Testing frontend..."
+curl -s http://localhost:3000 | grep -q "<!doctype html>" && echo "✅ Frontend is serving HTML"
 
-# 9. Stop server
+# 11. Stop servers
 pkill -f uvicorn
+pkill -f vite
 
-# 10. Stop database
+# 12. Stop database
 docker-compose down
 
-echo "🎉 All tests passed! Setup is working correctly."
+echo "🎉 All full stack tests passed! Setup is working correctly."
 ```
 
 ## Manual Testing Steps
+
+### 0. Frontend Testing
+
+```bash
+# Start frontend dev server
+npm run dev --prefix frontend
+
+# Run frontend tests
+npm run test:run --prefix frontend
+
+# Run tests with coverage
+npm run test:coverage --prefix frontend
+
+# Run tests in watch mode (for development)
+npm run test --prefix frontend
+
+# Test in browser
+open http://localhost:3000  # Should show home page with API status
+```
 
 ### 1. Database Testing
 
