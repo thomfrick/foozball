@@ -1,4 +1,4 @@
-# Foosball ELO Tracker - Feature Planning
+# Foosball TrueSkill Tracker - Feature Planning
 
 **Last Updated:** July 25, 2025
 **Current Status:** Phase 0.1 ✅ COMPLETED | Phase 1.1 ✅ COMPLETED | Phase 1.2 🔄 READY
@@ -89,22 +89,25 @@ We'll build this in phases, starting with core functionality and adding features
 - [ ] 1.2.F.6 Add form validation and error handling
 - [ ] 1.2.F.7 Write component tests
 
-### 1.3 Basic ELO System
+### 1.3 Basic TrueSkill System
 
 #### Backend (1.3.B)
-- [ ] 1.3.B.1 Implement basic ELO calculation function
-- [ ] 1.3.B.2 Create rating update logic after game creation
-- [ ] 1.3.B.3 Set default rating for new players (1500)
-- [ ] 1.3.B.4 Add rating history tracking (optional: separate table)
-- [ ] 1.3.B.5 Update player stats (games_played, wins, losses)
-- [ ] 1.3.B.6 Write comprehensive tests for ELO calculations
+- [ ] 1.3.B.1 Install and configure `python-trueskill` library
+- [ ] 1.3.B.2 Implement basic TrueSkill calculation function
+- [ ] 1.3.B.3 Create rating update logic after game creation
+- [ ] 1.3.B.4 Set default rating for new players (mu=25, sigma=8.333)
+- [ ] 1.3.B.5 Add rating history tracking (separate table for mu and sigma changes)
+- [ ] 1.3.B.6 Update player stats (games_played, wins, losses)
+- [ ] 1.3.B.7 Write comprehensive tests for TrueSkill calculations
 
 #### Frontend (1.3.F)
-- [ ] 1.3.F.1 Display current ratings on player profiles
+- [ ] 1.3.F.1 Display current ratings (mu and sigma) on player profiles
 - [ ] 1.3.F.2 Show rating changes after games
-- [ ] 1.3.F.3 Create basic leaderboard component
+- [ ] 1.3.F.3 Create basic leaderboard component (ranking by mu)
 - [ ] 1.3.F.4 Add rating display to game history
-- [ ] 1.3.F.5 Write tests for rating display components
+- [ ] 1.3.F.5 Add visual indicators for rating uncertainty (sigma)
+- [ ] 1.3.F.6 Add tooltips explaining TrueSkill
+- [ ] 1.3.F.7 Write tests for rating display components
 
 ### 1.4 Core UI/UX
 
@@ -119,22 +122,6 @@ We'll build this in phases, starting with core functionality and adding features
 - [ ] 1.4.F.8 Write accessibility tests
 
 ## Phase 2: Enhanced Features
-
-### 2.1 TrueSkill Integration
-
-#### Backend (2.1.B)
-- [ ] 2.1.B.1 Install and configure python-trueskill library
-- [ ] 2.1.B.2 Create TrueSkill rating calculation functions
-- [ ] 2.1.B.3 Migrate existing ELO ratings to TrueSkill format
-- [ ] 2.1.B.4 Update rating calculations to use TrueSkill
-- [ ] 2.1.B.5 Add confidence interval tracking (mu, sigma)
-- [ ] 2.1.B.6 Write comprehensive tests for TrueSkill implementation
-
-#### Frontend (2.1.F)
-- [ ] 2.1.F.1 Update rating displays to show confidence intervals
-- [ ] 2.1.F.2 Add visual indicators for rating uncertainty
-- [ ] 2.1.F.3 Update leaderboard to handle TrueSkill rankings
-- [ ] 2.1.F.4 Add tooltips explaining TrueSkill vs ELO
 
 ### 2.2 Team Games (2v2)
 
