@@ -4,11 +4,12 @@
 import type { ApiError } from '../types/api'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_BASE_URL_WITH_PREFIX = `${API_BASE_URL}/api/v1`
 
 class ApiClient {
   private baseUrl: string
 
-  constructor(baseUrl: string = API_BASE_URL) {
+  constructor(baseUrl: string = API_BASE_URL_WITH_PREFIX) {
     this.baseUrl = baseUrl
   }
 

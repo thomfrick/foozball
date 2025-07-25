@@ -9,4 +9,4 @@ services:
   frontend-dev:
     profiles: []  # Remove profiles to make it default
     environment:
-      - VITE_API_URL=http://backend:8000  # Use backend service name for container networking
+      - VITE_API_URL=http://localhost:8000  # Use localhost for browser access from host machine
