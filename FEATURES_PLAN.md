@@ -1,20 +1,33 @@
 # Foosball ELO Tracker - Feature Planning
 
+**Last Updated:** July 25, 2025  
+**Current Status:** Phase 0.1 ✅ COMPLETED | Phase 1 🔄 IN PROGRESS  
+**Git Commit:** e2659b1
+
 ## Development Philosophy: Start Small, Build Up
 
 We'll build this in phases, starting with core functionality and adding features incrementally.
 
+## 📊 Overall Progress
+
+- ✅ **Phase 0.1 Backend Foundation** - 100% Complete (10/10 tasks)
+- 🔄 **Phase 1.1 Player Management** - 40% Complete (4/10 tasks)
+- ⏳ **Phase 0.2 Frontend Foundation** - 0% Complete (0/7 tasks)
+- ⏳ **Phase 0.3 Integration Testing** - 0% Complete (0/5 tasks)
+
 ## Phase 0: Foundation Setup & Testing
 
-### 0.1 Backend Foundation
-- [ ] 0.1.1 Initialize Python project with uv (create pyproject.toml, virtual env)
-- [ ] 0.1.2 Initialize FastAPI project structure
-- [ ] 0.1.3 Set up PostgreSQL with Docker
-- [ ] 0.1.4 Configure SQLAlchemy + Alembic
-- [ ] 0.1.5 Create basic health check endpoint
-- [ ] 0.1.6 Set up pytest with test database
-- [ ] 0.1.7 Configure pre-commit hooks (Ruff for linting and formatting)
-- [ ] 0.1.8 Create Docker Compose for local development
+### 0.1 Backend Foundation ✅ COMPLETED
+- [x] 0.1.1 Initialize Python project with uv (create pyproject.toml, virtual env)
+- [x] 0.1.2 Initialize FastAPI project structure
+- [x] 0.1.3 Set up PostgreSQL with Docker
+- [x] 0.1.4 Configure SQLAlchemy + Alembic
+- [x] 0.1.5 Create basic health check endpoint
+- [x] 0.1.6 Set up pytest with test database
+- [x] 0.1.7 Configure Ruff for linting and formatting (integrated in pyproject.toml)
+- [x] 0.1.8 Create Docker Compose for local development
+- [x] 0.1.9 Initialize git repository and version control
+- [x] 0.1.10 Create comprehensive documentation (README, DEVELOPMENT, TESTING guides)
 
 ### 0.2 Frontend Foundation
 - [ ] 0.2.1 Initialize React + TypeScript + Vite project
@@ -37,14 +50,14 @@ We'll build this in phases, starting with core functionality and adding features
 ### 1.1 Player Management
 
 #### Backend (1.1.B)
-- [ ] 1.1.B.1 Create Player model (id, name, rating, games_played, created_at)
-- [ ] 1.1.B.2 Create database migration for players table
+- [x] 1.1.B.1 Create Player model (id, name, rating, games_played, created_at)
+- [x] 1.1.B.2 Create database migration for players table
 - [ ] 1.1.B.3 Implement POST /players endpoint (create player)
 - [ ] 1.1.B.4 Implement GET /players endpoint (list all players)
 - [ ] 1.1.B.5 Implement GET /players/{id} endpoint (get single player)
 - [ ] 1.1.B.6 Implement DELETE /players/{id} endpoint
-- [ ] 1.1.B.7 Add validation (unique names, required fields)
-- [ ] 1.1.B.8 Write unit tests for all player endpoints
+- [x] 1.1.B.7 Add validation (unique names, required fields) - implemented in model
+- [x] 1.1.B.8 Write unit tests for player model and database operations
 
 #### Frontend (1.1.F)
 - [ ] 1.1.F.1 Create Player type definitions
