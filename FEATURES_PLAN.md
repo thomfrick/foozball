@@ -1,7 +1,7 @@
 # Foosball TrueSkill Tracker - Feature Planning
 
 **Last Updated:** July 25, 2025
-**Current Status:** Phase 0.1 ✅ COMPLETED | Phase 1.1 ✅ COMPLETED | Phase 0.2 ✅ COMPLETED
+**Current Status:** Phase 0.1 ✅ COMPLETED | Phase 1.1 ✅ COMPLETED | Phase 0.2 ✅ COMPLETED | Phase 1.1.F ✅ COMPLETED
 **Git Commit:** 45529ea
 
 ## Development Philosophy: Start Small, Build Up
@@ -11,7 +11,8 @@ We'll build this in phases, starting with core functionality and adding features
 ## 📊 Overall Progress
 
 - ✅ **Phase 0.1 Backend Foundation** - 100% Complete (10/10 tasks)
-- ✅ **Phase 1.1 Player Management** - 100% Complete (10/10 tasks)
+- ✅ **Phase 1.1 Player Management Backend** - 100% Complete (8/8 tasks)
+- ✅ **Phase 1.1.F Player Management Frontend** - 100% Complete (8/8 tasks)
 - ✅ **Phase 0.2 Frontend Foundation** - 100% Complete (7/7 tasks)
 - ⏳ **Phase 0.3 Integration Testing** - 0% Complete (0/5 tasks)
 
@@ -47,7 +48,7 @@ We'll build this in phases, starting with core functionality and adding features
 
 ## Phase 1: MVP (Minimum Viable Product)
 
-### 1.1 Player Management ✅ COMPLETED (Backend)
+### 1.1 Player Management ✅ COMPLETED (Full Stack)
 
 #### Backend (1.1.B) ✅ COMPLETED
 - [x] 1.1.B.1 Create Player model (id, name, rating, games_played, created_at)
@@ -59,15 +60,15 @@ We'll build this in phases, starting with core functionality and adding features
 - [x] 1.1.B.7 Add validation (unique names, required fields) - implemented in model
 - [x] 1.1.B.8 Write unit tests for player model and database operations
 
-#### Frontend (1.1.F)
-- [ ] 1.1.F.1 Create Player type definitions
-- [ ] 1.1.F.2 Create API hooks for player operations (useCreatePlayer, usePlayers, etc.)
-- [ ] 1.1.F.3 Build Add Player form component
-- [ ] 1.1.F.4 Build Player List component
-- [ ] 1.1.F.5 Build Player Detail/Profile component
-- [ ] 1.1.F.6 Add delete player functionality
-- [ ] 1.1.F.7 Add form validation and error handling
-- [ ] 1.1.F.8 Write component tests
+#### Frontend (1.1.F) ✅ COMPLETED
+- [x] 1.1.F.1 Create Player type definitions
+- [x] 1.1.F.2 Create API hooks for player operations (useCreatePlayer, usePlayers, etc.)
+- [x] 1.1.F.3 Build Add Player form component
+- [x] 1.1.F.4 Build Player List component
+- [x] 1.1.F.5 Build Player Detail/Profile component
+- [x] 1.1.F.6 Add delete player functionality
+- [x] 1.1.F.7 Add form validation and error handling
+- [x] 1.1.F.8 Write component tests
 
 ### 1.2 Game Recording
 

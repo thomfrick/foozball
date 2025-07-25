@@ -144,11 +144,13 @@ frontend/
 - **✅ Phase 0.1 Complete**: Backend Foundation (FastAPI + PostgreSQL)
 - **✅ Phase 0.2 Complete**: Frontend Foundation (React + TypeScript + Vite)
 - **✅ Phase 1.1 Complete**: Full Player Management API (CRUD operations)
-- **⏳ Next Phase**: Phase 0.3 Integration Testing or Phase 1.1.F Frontend Player Management
+- **✅ Phase 1.1.F Complete**: Full Player Management Frontend (Complete UI)
+- **⏳ Next Phase**: Phase 0.3 Integration Testing or Phase 1.2 Game Recording
 - **Database**: Players table with TrueSkill ratings, game statistics
 - **API Endpoints**: `/players` CRUD, `/health`, `/ready`, `/docs`
-- **Frontend**: Full routing, API client, health checks, component testing
-- **Test Coverage**: Backend 89%, Frontend 4 tests passing
+- **Frontend**: Complete player management UI with forms, lists, search, modals
+- **Test Coverage**: Backend 89%, Frontend 14 tests passing
+- **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
 
 ### Key Patterns
 - **Database**: Uses SQLAlchemy with async-compatible Session dependency injection
@@ -157,6 +159,16 @@ frontend/
 - **Soft Deletes**: Players marked as `is_active=False` instead of hard deletion
 - **Pagination**: Built-in pagination for list endpoints with metadata
 - **Health Checks**: Separate `/health` (basic) and `/ready` (database check) endpoints
+
+### Frontend Features (Phase 1.1.F)
+- **Player Management**: Complete CRUD interface with forms, validation, and error handling
+- **Search & Filtering**: Debounced search with pagination (300ms delay to reduce API calls)
+- **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
+- **Modal Dialogs**: Focus management, escape key handling, and click-outside closing
+- **Loading States**: Skeleton loading, error boundaries, and retry mechanisms
+- **Form Validation**: Real-time validation with user-friendly error messages
+- **Responsive Design**: Mobile-first design with Tailwind CSS
+- **State Management**: TanStack Query for server state with optimized caching
 
 ### Environment Variables
 Create `backend/.env` with:
