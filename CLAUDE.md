@@ -213,3 +213,7 @@ SECRET_KEY=dev-secret-key-change-in-production
 - **Interactive docs**: http://localhost:8000/docs (Swagger UI)
 - **ReDoc**: http://localhost:8000/redoc
 - **OpenAPI JSON**: http://localhost:8000/openapi.json
+
+
+# Using Gemini
+@use_gemini.md
