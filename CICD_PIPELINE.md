@@ -8,7 +8,7 @@ We'll use GitHub Actions for CI/CD with a focus on automated testing, code quali
 
 ### 1. Code Quality & Testing (`.github/workflows/test.yml`)
 
-**Triggers:** 
+**Triggers:**
 - Push to any branch
 - Pull requests to main
 - Scheduled runs (daily)
@@ -102,26 +102,26 @@ repos:
         entry: ruff check
         language: system
         files: \.py$
-        
+
       - id: ruff-format
         name: Ruff Formatting
         entry: ruff format
         language: system
         files: \.py$
-        
+
       - id: pytest
         name: Python Tests
         entry: pytest tests/ -x -v
         language: system
         files: \.py$
         pass_filenames: false
-        
+
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.0.0
     hooks:
       - id: prettier
         files: \.(js|jsx|ts|tsx|json|css|md)$
-        
+
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.44.0
     hooks:
@@ -142,7 +142,7 @@ repos:
 ```python
 # Test pyramid structure
 - Unit Tests (70%): Fast, isolated component tests
-- Integration Tests (20%): Database + API endpoint tests  
+- Integration Tests (20%): Database + API endpoint tests
 - E2E Tests (10%): Full workflow tests with test database
 ```
 
@@ -207,7 +207,7 @@ repos:
 # docker-compose.prod.yml structure
 services:
   web:          # FastAPI backend
-  frontend:     # React production build  
+  frontend:     # React production build
   db:           # PostgreSQL with backups
   redis:        # Caching layer (future)
   nginx:        # Reverse proxy + static files
@@ -293,7 +293,7 @@ These CI/CD components should be added to Phase 0:
 - [ ] 0.1.10 Configure pre-commit hooks
 - [ ] 0.1.11 Set up basic deployment pipeline
 
-### 0.2 Frontend Foundation  
+### 0.2 Frontend Foundation
 - [ ] 0.2.8 Set up GitHub Actions for frontend testing
 - [ ] 0.2.9 Configure Playwright for E2E testing
 

@@ -44,7 +44,7 @@ CREATE TABLE games (
     tournament_id INTEGER,  -- FK added later
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     notes TEXT,
-    
+
     CONSTRAINT check_different_players CHECK (player1_id != player2_id),
     CONSTRAINT check_valid_winner CHECK (winner_id IN (player1_id, player2_id))
 );
@@ -93,7 +93,7 @@ CREATE TABLE teams (
     losses INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
+
     CONSTRAINT check_different_team_players CHECK (player1_id != player2_id),
     CONSTRAINT unique_team_combination UNIQUE(LEAST(player1_id, player2_id), GREATEST(player1_id, player2_id))
 );
@@ -113,7 +113,7 @@ CREATE TABLE team_games (
     tournament_id INTEGER,  -- FK added later
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     notes TEXT,
-    
+
     CONSTRAINT check_different_teams CHECK (team1_id != team2_id),
     CONSTRAINT check_valid_team_winner CHECK (winner_team_id IN (team1_id, team2_id))
 );
@@ -159,7 +159,7 @@ CREATE TABLE tournaments (
     winner_team_id INTEGER REFERENCES teams(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
+
     CONSTRAINT check_winner_consistency CHECK (
         (game_type = 'singles' AND winner_id IS NOT NULL AND winner_team_id IS NULL) OR
         (game_type = 'doubles' AND winner_team_id IS NOT NULL AND winner_id IS NULL) OR
@@ -181,7 +181,7 @@ CREATE TABLE tournament_participants (
     team_id INTEGER REFERENCES teams(id) ON DELETE CASCADE,
     seed INTEGER,
     registration_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
+
     CONSTRAINT check_participant_type CHECK (
         (player_id IS NOT NULL AND team_id IS NULL) OR
         (team_id IS NOT NULL AND player_id IS NULL)
@@ -209,7 +209,7 @@ CREATE TABLE tournament_matches (
     status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed', 'bye')),
     scheduled_at TIMESTAMP WITH TIME ZONE,
     completed_at TIMESTAMP WITH TIME ZONE,
-    
+
     CONSTRAINT check_game_consistency CHECK (
         (game_id IS NOT NULL AND team_game_id IS NULL) OR
         (team_game_id IS NOT NULL AND game_id IS NULL) OR
@@ -249,7 +249,7 @@ CREATE TABLE player_achievements (
     achievement_id INTEGER NOT NULL REFERENCES achievements(id) ON DELETE CASCADE,
     earned_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     game_id INTEGER REFERENCES games(id),  -- Which game earned it
-    
+
     CONSTRAINT unique_player_achievement UNIQUE(player_id, achievement_id)
 );
 
@@ -262,7 +262,7 @@ CREATE INDEX idx_player_achievements_earned_at ON player_achievements(earned_at 
 ### player_stats_view
 ```sql
 CREATE VIEW player_stats_view AS
-SELECT 
+SELECT
     p.id,
     p.name,
     p.elo_rating,
@@ -273,9 +273,9 @@ SELECT
     p.losses,
     CASE WHEN p.games_played > 0 THEN ROUND((p.wins::decimal / p.games_played) * 100, 2) ELSE 0 END as win_percentage,
     (
-        SELECT COUNT(*) 
-        FROM games g 
-        WHERE (g.player1_id = p.id OR g.player2_id = p.id) 
+        SELECT COUNT(*)
+        FROM games g
+        WHERE (g.player1_id = p.id OR g.player2_id = p.id)
         AND g.created_at >= NOW() - INTERVAL '30 days'
     ) as games_last_30_days,
     p.created_at,
@@ -286,7 +286,7 @@ FROM players p;
 ### head_to_head_view
 ```sql
 CREATE VIEW head_to_head_view AS
-SELECT 
+SELECT
     LEAST(g.player1_id, g.player2_id) as player1_id,
     GREATEST(g.player1_id, g.player2_id) as player2_id,
     COUNT(*) as total_games,

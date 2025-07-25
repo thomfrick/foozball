@@ -18,7 +18,7 @@ class TestPlayerModel:
             games_played=0,
             wins=0,
             losses=0,
-            is_active=True
+            is_active=True,
         )
 
         assert player.name == "Test Player"
@@ -69,7 +69,7 @@ class TestPlayerModel:
             name="Custom Player",
             elo_rating=1800.0,
             trueskill_mu=30.0,
-            trueskill_sigma=5.0
+            trueskill_sigma=5.0,
         )
 
         assert player.elo_rating == 1800.0
@@ -78,12 +78,7 @@ class TestPlayerModel:
 
     def test_player_stats(self):
         """Test player with game statistics"""
-        player = Player(
-            name="Stats Player",
-            games_played=20,
-            wins=15,
-            losses=5
-        )
+        player = Player(name="Stats Player", games_played=20, wins=15, losses=5)
 
         assert player.games_played == 20
         assert player.wins == 15

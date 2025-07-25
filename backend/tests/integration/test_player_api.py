@@ -21,7 +21,7 @@ class TestPlayerAPI:
 
         response = client.post(
             "/api/v1/players/",
-            json={"name": "Test Player", "email": "test@example.com"}
+            json={"name": "Test Player", "email": "test@example.com"},
         )
         assert response.status_code == 201
         data = response.json()
@@ -40,10 +40,7 @@ class TestPlayerAPI:
 
     def test_create_player_without_email(self, clean_db: Session):
         """Test creating player without email"""
-        response = client.post(
-            "/api/v1/players/",
-            json={"name": "No Email Player"}
-        )
+        response = client.post("/api/v1/players/", json={"name": "No Email Player"})
         assert response.status_code == 201
         data = response.json()
         assert data["name"] == "No Email Player"
@@ -52,16 +49,10 @@ class TestPlayerAPI:
     def test_create_player_duplicate_name(self, clean_db: Session):
         """Test creating player with duplicate name"""
         # Create first player
-        client.post(
-            "/api/v1/players/",
-            json={"name": "Duplicate Name"}
-        )
+        client.post("/api/v1/players/", json={"name": "Duplicate Name"})
 
         # Try to create another with same name
-        response = client.post(
-            "/api/v1/players/",
-            json={"name": "Duplicate Name"}
-        )
+        response = client.post("/api/v1/players/", json={"name": "Duplicate Name"})
         assert response.status_code == 400
         assert "name already exists" in response.json()["detail"]
 
@@ -69,14 +60,12 @@ class TestPlayerAPI:
         """Test creating player with duplicate email"""
         # Create first player
         client.post(
-            "/api/v1/players/",
-            json={"name": "Player One", "email": "same@example.com"}
+            "/api/v1/players/", json={"name": "Player One", "email": "same@example.com"}
         )
 
         # Try to create another with same email
         response = client.post(
-            "/api/v1/players/",
-            json={"name": "Player Two", "email": "same@example.com"}
+            "/api/v1/players/", json={"name": "Player Two", "email": "same@example.com"}
         )
         assert response.status_code == 400
         assert "email already exists" in response.json()["detail"]
@@ -84,17 +73,13 @@ class TestPlayerAPI:
     def test_create_player_invalid_email(self, clean_db: Session):
         """Test creating player with invalid email"""
         response = client.post(
-            "/api/v1/players/",
-            json={"name": "Bad Email", "email": "not-an-email"}
+            "/api/v1/players/", json={"name": "Bad Email", "email": "not-an-email"}
         )
         assert response.status_code == 422
 
     def test_create_player_empty_name(self, clean_db: Session):
         """Test creating player with empty name"""
-        response = client.post(
-            "/api/v1/players/",
-            json={"name": ""}
-        )
+        response = client.post("/api/v1/players/", json={"name": ""})
         assert response.status_code == 422
 
     def test_list_players_empty(self, clean_db: Session):
@@ -122,7 +107,7 @@ class TestPlayerAPI:
         players_data = [
             {"name": "High Rating", "email": "high@example.com"},
             {"name": "Medium Rating", "email": "medium@example.com"},
-            {"name": "Low Rating", "email": "low@example.com"}
+            {"name": "Low Rating", "email": "low@example.com"},
         ]
 
         for player_data in players_data:
@@ -147,7 +132,7 @@ class TestPlayerAPI:
         for i in range(5):
             client.post(
                 "/api/v1/players/",
-                json={"name": f"Player {i}", "email": f"player{i}@example.com"}
+                json={"name": f"Player {i}", "email": f"player{i}@example.com"},
             )
 
         # Test first page with page_size=2
@@ -216,7 +201,7 @@ class TestPlayerAPI:
         # Create a player
         response = client.post(
             "/api/v1/players/",
-            json={"name": "Get Test Player", "email": "get@example.com"}
+            json={"name": "Get Test Player", "email": "get@example.com"},
         )
         player_id = response.json()["id"]
 
@@ -239,14 +224,14 @@ class TestPlayerAPI:
         # Create a player
         response = client.post(
             "/api/v1/players/",
-            json={"name": "Original Name", "email": "original@example.com"}
+            json={"name": "Original Name", "email": "original@example.com"},
         )
         player_id = response.json()["id"]
 
         # Update the player
         response = client.put(
             f"/api/v1/players/{player_id}",
-            json={"name": "Updated Name", "email": "updated@example.com"}
+            json={"name": "Updated Name", "email": "updated@example.com"},
         )
         assert response.status_code == 200
         data = response.json()
@@ -259,14 +244,13 @@ class TestPlayerAPI:
         # Create a player
         response = client.post(
             "/api/v1/players/",
-            json={"name": "Partial Update", "email": "partial@example.com"}
+            json={"name": "Partial Update", "email": "partial@example.com"},
         )
         player_id = response.json()["id"]
 
         # Update only the name
         response = client.put(
-            f"/api/v1/players/{player_id}",
-            json={"name": "New Name Only"}
+            f"/api/v1/players/{player_id}", json={"name": "New Name Only"}
         )
         assert response.status_code == 200
         data = response.json()
@@ -275,19 +259,13 @@ class TestPlayerAPI:
 
     def test_update_player_not_found(self, clean_db: Session):
         """Test updating non-existent player"""
-        response = client.put(
-            "/api/v1/players/99999",
-            json={"name": "Not Found"}
-        )
+        response = client.put("/api/v1/players/99999", json={"name": "Not Found"})
         assert response.status_code == 404
 
     def test_delete_player_success(self, clean_db: Session):
         """Test deleting a player"""
         # Create a player
-        response = client.post(
-            "/api/v1/players/",
-            json={"name": "Delete Me"}
-        )
+        response = client.post("/api/v1/players/", json={"name": "Delete Me"})
         player_id = response.json()["id"]
 
         # Delete the player

@@ -19,14 +19,14 @@ class TestDatabase:
         self.engine = create_engine(
             self.config.database_url,
             poolclass=StaticPool,
-            connect_args={"check_same_thread": False} if "sqlite" in self.config.database_url else {},
+            connect_args={"check_same_thread": False}
+            if "sqlite" in self.config.database_url
+            else {},
             echo=False,  # Reduce noise in tests
         )
 
         self.TestingSessionLocal = sessionmaker(
-            autocommit=False,
-            autoflush=False,
-            bind=self.engine
+            autocommit=False, autoflush=False, bind=self.engine
         )
 
     def create_database(self):
@@ -40,9 +40,9 @@ class TestDatabase:
             conn = conn.execution_options(autocommit=True)
 
             # Check if test database exists
-            result = conn.execute(text(
-                "SELECT 1 FROM pg_database WHERE datname = 'foosball_test'"
-            ))
+            result = conn.execute(
+                text("SELECT 1 FROM pg_database WHERE datname = 'foosball_test'")
+            )
 
             if not result.fetchone():
                 conn.execute(text("CREATE DATABASE foosball_test"))

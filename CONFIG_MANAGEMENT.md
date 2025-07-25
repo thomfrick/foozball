@@ -15,11 +15,11 @@ import os
 
 class DatabaseConfig(BaseSettings):
     host: str = Field(..., env="DB_HOST")
-    port: int = Field(5432, env="DB_PORT") 
+    port: int = Field(5432, env="DB_PORT")
     name: str = Field(..., env="DB_NAME")
     user: str = Field(..., env="DB_USER")
     password: str = Field(..., env="DB_PASSWORD")
-    
+
     @property
     def url(self) -> str:
         return f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}"
@@ -41,37 +41,37 @@ class AppConfig(BaseSettings):
     version: str = Field("1.0.0", env="APP_VERSION")
     environment: str = Field("development", env="ENVIRONMENT")
     debug: bool = Field(False, env="DEBUG")
-    
+
     # API Settings
     api_prefix: str = Field("/api/v1", env="API_PREFIX")
     allowed_hosts: List[str] = Field(["*"], env="ALLOWED_HOSTS")
     cors_origins: List[str] = Field(["http://localhost:3000"], env="CORS_ORIGINS")
-    
+
     # Security
     secret_key: str = Field(..., env="SECRET_KEY")
-    
+
     # Database
     database: DatabaseConfig = DatabaseConfig()
-    
+
     # Redis (optional, for caching)
     redis: Optional[RedisConfig] = None
-    
+
     # Auth
     auth: AuthConfig = AuthConfig()
-    
+
     # Logging
     log_level: str = Field("INFO", env="LOG_LEVEL")
     log_format: str = Field("json", env="LOG_FORMAT")  # json or text
-    
+
     # External Services
     sentry_dsn: Optional[str] = Field(None, env="SENTRY_DSN")
-    
+
     # TrueSkill Settings
     trueskill_mu: float = Field(25.0, env="TRUESKILL_MU")
     trueskill_sigma: float = Field(8.333, env="TRUESKILL_SIGMA")
     trueskill_beta: float = Field(4.167, env="TRUESKILL_BETA")
     trueskill_tau: float = Field(0.083, env="TRUESKILL_TAU")
-    
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
@@ -434,14 +434,14 @@ import boto3  # For AWS Secrets Manager
 class SecretsManager:
     def __init__(self):
         self.environment = os.getenv("ENVIRONMENT", "development")
-        
+
     def get_secret(self, secret_name: str) -> Optional[str]:
         if self.environment == "development":
             return os.getenv(secret_name)
         else:
             # Use cloud secrets manager
             return self._get_from_aws_secrets(secret_name)
-    
+
     def _get_from_aws_secrets(self, secret_name: str) -> Optional[str]:
         # Implementation for AWS Secrets Manager
         pass
@@ -456,19 +456,19 @@ from pydantic import validator
 
 class AppConfig(BaseSettings):
     # ... other fields ...
-    
+
     @validator('secret_key')
     def secret_key_length(cls, v):
         if len(v) < 32:
             raise ValueError('SECRET_KEY must be at least 32 characters long')
         return v
-    
+
     @validator('environment')
     def valid_environment(cls, v):
         if v not in ['development', 'staging', 'production']:
             raise ValueError('ENVIRONMENT must be development, staging, or production')
         return v
-    
+
     @validator('cors_origins')
     def validate_cors_origins(cls, v):
         if isinstance(v, str):
@@ -492,7 +492,7 @@ def test_config_validation():
         db_password='test_pass'
     )
     assert config.secret_key == 'a' * 32
-    
+
 def test_invalid_secret_key():
     # Test invalid secret key
     with pytest.raises(ValueError):
@@ -515,7 +515,7 @@ class FeatureFlags(BaseSettings):
     enable_team_games: bool = Field(True, env="ENABLE_TEAM_GAMES")
     enable_statistics: bool = Field(True, env="ENABLE_STATISTICS")
     enable_user_registration: bool = Field(False, env="ENABLE_USER_REGISTRATION")
-    
+
     class Config:
         env_prefix = "FEATURE_"
 ```

@@ -1,7 +1,7 @@
 # Project Status - Foosball ELO Tracker
 
-**Last Updated:** July 25, 2025  
-**Current Phase:** 0.1 - Backend Foundation  
+**Last Updated:** July 25, 2025
+**Current Phase:** 0.1 - Backend Foundation
 **Overall Progress:** 🟢 On Track
 
 ## 📊 Progress Summary

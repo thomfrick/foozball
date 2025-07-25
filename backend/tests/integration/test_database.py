@@ -25,9 +25,11 @@ class TestDatabaseConnection:
     def test_tables_exist(self, db_session: Session):
         """Test that required tables exist"""
         # Check if players table exists
-        result = db_session.execute(text(
-            "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'players')"
-        ))
+        result = db_session.execute(
+            text(
+                "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'players')"
+            )
+        )
         assert result.fetchone()[0] is True
 
         # Note: alembic_version table only exists when using migrations
@@ -39,10 +41,7 @@ class TestPlayerCRUD:
 
     def test_create_player(self, clean_db: Session):
         """Test creating a player in the database"""
-        player = Player(
-            name="Test Player",
-            email="test@example.com"
-        )
+        player = Player(name="Test Player", email="test@example.com")
 
         clean_db.add(player)
         clean_db.commit()
@@ -61,7 +60,9 @@ class TestPlayerCRUD:
         clean_db.commit()
 
         # Read player back
-        found_player = clean_db.query(Player).filter(Player.name == "Read Test Player").first()
+        found_player = (
+            clean_db.query(Player).filter(Player.name == "Read Test Player").first()
+        )
 
         assert found_player is not None
         assert found_player.name == "Read Test Player"
@@ -148,6 +149,8 @@ class TestPlayerCRUD:
         assert high_rated[0].name == "Player 2"
 
         # Order by rating
-        ordered_players = clean_db.query(Player).order_by(Player.elo_rating.desc()).all()
+        ordered_players = (
+            clean_db.query(Player).order_by(Player.elo_rating.desc()).all()
+        )
         assert ordered_players[0].name == "Player 2"  # Highest rated
         assert ordered_players[-1].name == "Player 1"  # Lowest rated

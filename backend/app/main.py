@@ -15,7 +15,7 @@ app = FastAPI(
     description="API for tracking foosball games and player ratings",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # CORS middleware configuration
@@ -38,7 +38,7 @@ async def root():
         "name": config.name,
         "version": config.version,
         "status": "healthy",
-        "environment": config.environment
+        "environment": config.environment,
     }
 
 
@@ -49,7 +49,7 @@ async def health_check():
         "status": "healthy",
         "service": "foosball-api",
         "version": config.version,
-        "environment": config.environment
+        "environment": config.environment,
     }
 
 
@@ -65,9 +65,7 @@ async def readiness_check(db: Session = Depends(get_db)):
             "service": "foosball-api",
             "version": config.version,
             "environment": config.environment,
-            "checks": {
-                "database": "healthy"
-            }
+            "checks": {"database": "healthy"},
         }
     except Exception as e:
         raise HTTPException(
@@ -75,8 +73,6 @@ async def readiness_check(db: Session = Depends(get_db)):
             detail={
                 "status": "not_ready",
                 "error": str(e),
-                "checks": {
-                    "database": "unhealthy"
-                }
-            }
+                "checks": {"database": "unhealthy"},
+            },
         )

@@ -37,7 +37,7 @@ curl http://localhost:8000/           # Should return: {"name":"Foosball ELO Tra
 ```
 foosball/
 ├── README.md              # 📖 Full documentation
-├── DEVELOPMENT.md         # 🛠️ Daily workflow commands  
+├── DEVELOPMENT.md         # 🛠️ Daily workflow commands
 ├── TESTING.md            # 🧪 How to test everything
 ├── STATUS.md             # 📊 Current progress
 ├── docker-compose.yml    # 🐳 Database setup
@@ -62,7 +62,7 @@ foosball/
 ## 🎯 Next Steps
 
 1. **Add your first player** (coming soon - API endpoints)
-2. **Record games** (coming soon - game management)  
+2. **Record games** (coming soon - game management)
 3. **View ratings** (coming soon - ELO calculations)
 4. **Build frontend** (coming soon - React app)
 
@@ -88,7 +88,7 @@ docker-compose down -v
 ## 📚 More Help
 
 - **Full setup:** See `README.md`
-- **Daily commands:** See `DEVELOPMENT.md`  
+- **Daily commands:** See `DEVELOPMENT.md`
 - **Testing:** See `TESTING.md`
 - **Progress:** See `STATUS.md`
 

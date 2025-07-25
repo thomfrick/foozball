@@ -35,37 +35,26 @@ def main():
     success = True
 
     if test_type in ["all", "unit"]:
-        success &= run_command(
-            "uv run pytest tests/unit/ -v",
-            "Unit Tests"
-        )
+        success &= run_command("uv run pytest tests/unit/ -v", "Unit Tests")
 
     if test_type in ["all", "integration"]:
         success &= run_command(
-            "uv run pytest tests/integration/ -v",
-            "Integration Tests"
+            "uv run pytest tests/integration/ -v", "Integration Tests"
         )
 
     if test_type in ["all", "coverage"]:
         success &= run_command(
             "uv run pytest tests/ --cov=app --cov-report=term-missing --cov-report=html",
-            "Coverage Report"
+            "Coverage Report",
         )
 
     if test_type == "lint":
-        success &= run_command(
-            "uv run ruff check .",
-            "Ruff Linting"
-        )
-        success &= run_command(
-            "uv run ruff format --check .",
-            "Ruff Formatting Check"
-        )
+        success &= run_command("uv run ruff check .", "Ruff Linting")
+        success &= run_command("uv run ruff format --check .", "Ruff Formatting Check")
 
     if test_type == "quick":
         success &= run_command(
-            "uv run pytest tests/unit/ -x",
-            "Quick Unit Tests (stop on first failure)"
+            "uv run pytest tests/unit/ -x", "Quick Unit Tests (stop on first failure)"
         )
 
     print("\n" + "=" * 50)

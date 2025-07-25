@@ -31,7 +31,7 @@ class LogEntry(BaseModel):
     status_code: Optional[int] = None
     duration_ms: Optional[float] = None
     context: Dict[str, Any] = Field(default_factory=dict)
-    
+
 class GameLogEntry(LogEntry):
     game_id: Optional[int] = None
     player1_id: Optional[int] = None
@@ -60,13 +60,13 @@ from app.config import config
 class StructuredJSONFormatter(jsonlogger.JsonFormatter):
     def add_fields(self, log_record: Dict[str, Any], record: logging.LogRecord, message_dict: Dict[str, Any]) -> None:
         super().add_fields(log_record, record, message_dict)
-        
+
         # Add standard fields
         log_record['timestamp'] = record.created
         log_record['level'] = record.levelname
         log_record['service'] = 'foosball-api'
         log_record['version'] = config.app.version
-        
+
         # Add request context if available
         if hasattr(record, 'request_id'):
             log_record['request_id'] = record.request_id
@@ -78,14 +78,14 @@ class StructuredJSONFormatter(jsonlogger.JsonFormatter):
 def setup_logging():
     root_logger = logging.getLogger()
     root_logger.setLevel(getattr(logging, config.log_level))
-    
+
     # Remove default handlers
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
-    
+
     # Create console handler
     console_handler = logging.StreamHandler()
-    
+
     if config.log_format == "json":
         formatter = StructuredJSONFormatter(
             '%(timestamp)s %(level)s %(name)s %(message)s'
@@ -94,10 +94,10 @@ def setup_logging():
         formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
-    
+
     console_handler.setFormatter(formatter)
     root_logger.addHandler(console_handler)
-    
+
     return root_logger
 ```
 
@@ -123,10 +123,10 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         # Generate request ID
         request_id = str(uuid.uuid4())
         request_id_var.set(request_id)
-        
+
         # Start timing
         start_time = time.time()
-        
+
         # Log request
         logger.info(
             "Request started",
@@ -139,12 +139,12 @@ class LoggingMiddleware(BaseHTTPMiddleware):
                 'ip_address': request.client.host
             }
         )
-        
+
         # Process request
         try:
             response = await call_next(request)
             duration_ms = (time.time() - start_time) * 1000
-            
+
             # Log response
             logger.info(
                 "Request completed",
@@ -156,12 +156,12 @@ class LoggingMiddleware(BaseHTTPMiddleware):
                     'duration_ms': round(duration_ms, 2)
                 }
             )
-            
+
             return response
-            
+
         except Exception as e:
             duration_ms = (time.time() - start_time) * 1000
-            
+
             logger.error(
                 "Request failed",
                 extra={
@@ -178,25 +178,25 @@ class LoggingMiddleware(BaseHTTPMiddleware):
 # Helper function for business logic logging
 def get_logger_with_context(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
-    
+
     class ContextLoggerAdapter(logging.LoggerAdapter):
         def process(self, msg, kwargs):
             extra = kwargs.get('extra', {})
-            
+
             # Add context variables
             try:
                 extra['request_id'] = request_id_var.get()
             except LookupError:
                 pass
-                
+
             try:
                 extra['user_id'] = user_id_var.get()
             except LookupError:
                 pass
-                
+
             kwargs['extra'] = extra
             return msg, kwargs
-    
+
     return ContextLoggerAdapter(logger, {})
 ```
 
@@ -218,14 +218,14 @@ class GameService:
                 'winner_id': game_data.winner_id
             }
         )
-        
+
         try:
             # Create game logic
             game = await self._create_game_record(game_data)
-            
+
             # Calculate rating changes
             rating_changes = await self._update_ratings(game_data)
-            
+
             logger.info(
                 "Game created successfully",
                 extra={
@@ -236,9 +236,9 @@ class GameService:
                     'rating_changes': rating_changes
                 }
             )
-            
+
             return game
-            
+
         except Exception as e:
             logger.error(
                 "Failed to create game",
@@ -284,14 +284,14 @@ async def readiness_check(db: Session = Depends(get_db)):
     try:
         # Check database connectivity
         db.execute("SELECT 1")
-        
+
         # Check system resources
         memory_percent = psutil.virtual_memory().percent
         disk_percent = psutil.disk_usage('/').percent
-        
+
         # Determine if system is ready
         is_ready = memory_percent < 90 and disk_percent < 90
-        
+
         return {
             "status": "ready" if is_ready else "not_ready",
             "timestamp": time.time(),
@@ -301,7 +301,7 @@ async def readiness_check(db: Session = Depends(get_db)):
                 "disk_usage_percent": disk_percent
             }
         }
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=503,
@@ -322,11 +322,11 @@ async def metrics_endpoint(db: Session = Depends(get_db)):
         games_today = db.execute(
             "SELECT COUNT(*) FROM games WHERE created_at >= CURRENT_DATE"
         ).scalar()
-        
+
         # System metrics
         memory_usage = psutil.virtual_memory().percent
         cpu_usage = psutil.cpu_percent()
-        
+
         return {
             "business_metrics": {
                 "total_players": total_players,
@@ -339,7 +339,7 @@ async def metrics_endpoint(db: Session = Depends(get_db)):
             },
             "timestamp": time.time()
         }
-        
+
     except Exception as e:
         logger.error("Failed to collect metrics", extra={'error': str(e)})
         raise HTTPException(status_code=500, detail="Failed to collect metrics")
@@ -362,19 +362,19 @@ class MetricsCollector:
         self._request_counts: Dict[str, int] = defaultdict(int)
         self._error_counts: Dict[str, int] = defaultdict(int)
         self._lock = Lock()
-    
+
     def record_request(self, endpoint: str, duration_ms: float, status_code: int):
         with self._lock:
             self._request_times[endpoint].append(duration_ms)
             self._request_counts[endpoint] += 1
-            
+
             if status_code >= 400:
                 self._error_counts[endpoint] += 1
-    
+
     def get_metrics(self) -> Dict[str, Any]:
         with self._lock:
             metrics = {}
-            
+
             for endpoint in self._request_times:
                 times = list(self._request_times[endpoint])
                 if times:
@@ -385,7 +385,7 @@ class MetricsCollector:
                         'p95_duration_ms': sorted(times)[int(len(times) * 0.95)] if times else 0,
                         'error_rate': self._error_counts[endpoint] / self._request_counts[endpoint]
                     }
-            
+
             return metrics
 
 # Global metrics collector
@@ -394,14 +394,14 @@ metrics_collector = MetricsCollector()
 class MetricsMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()
-        
+
         response = await call_next(request)
-        
+
         duration_ms = (time.time() - start_time) * 1000
         endpoint = request.url.path
-        
+
         metrics_collector.record_request(endpoint, duration_ms, response.status_code)
-        
+
         return response
 ```
 
@@ -433,7 +433,7 @@ def capture_business_event(event_name: str, extra_data: dict = None):
         if extra_data:
             for key, value in extra_data.items():
                 scope.set_extra(key, value)
-        
+
         sentry_sdk.capture_message(event_name, level='info')
 ```
 
@@ -465,7 +465,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
-    
+
     // Send to Sentry
     Sentry.captureException(error, {
       contexts: {
@@ -511,7 +511,7 @@ class PerformanceMonitor {
 
   startTimer(name: string): () => void {
     const startTime = performance.now();
-    
+
     return () => {
       const duration = performance.now() - startTime;
       this.recordMetric(name, duration);
@@ -626,24 +626,24 @@ class NotificationService:
     def __init__(self):
         self.slack_webhook = config.slack_webhook_url
         self.email_config = config.email
-    
+
     async def send_alert(self, alert_type: str, message: str, severity: str, data: Dict[str, Any] = None):
         """Send alert through configured channels"""
-        
+
         if self.slack_webhook:
             await self._send_slack_alert(alert_type, message, severity, data)
-        
+
         if severity in ["high", "critical"] and self.email_config:
             await self._send_email_alert(alert_type, message, severity, data)
-    
+
     async def _send_slack_alert(self, alert_type: str, message: str, severity: str, data: Dict[str, Any]):
         color_map = {
             "low": "#36a64f",
-            "medium": "#ff9500", 
+            "medium": "#ff9500",
             "high": "#ff0000",
             "critical": "#8B0000"
         }
-        
+
         payload = {
             "attachments": [
                 {
@@ -658,10 +658,10 @@ class NotificationService:
                 }
             ]
         }
-        
+
         async with httpx.AsyncClient() as client:
             await client.post(self.slack_webhook, json=payload)
-    
+
     async def _send_email_alert(self, alert_type: str, message: str, severity: str, data: Dict[str, Any]):
         # Email implementation
         pass

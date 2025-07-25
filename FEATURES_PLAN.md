@@ -1,7 +1,7 @@
 # Foosball ELO Tracker - Feature Planning
 
-**Last Updated:** July 25, 2025  
-**Current Status:** Phase 0.1 ✅ COMPLETED | Phase 1.1 ✅ COMPLETED | Phase 1.2 🔄 READY  
+**Last Updated:** July 25, 2025
+**Current Status:** Phase 0.1 ✅ COMPLETED | Phase 1.1 ✅ COMPLETED | Phase 1.2 🔄 READY
 **Git Commit:** e2659b1
 
 ## Development Philosophy: Start Small, Build Up

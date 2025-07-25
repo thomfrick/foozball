@@ -235,7 +235,7 @@ class GameCreate(GameBase):
             if v not in [values['player1_id'], values['player2_id']]:
                 raise ValueError('Winner must be one of the players')
         return v
-    
+
     @validator('player2_id')
     def players_must_be_different(cls, v, values):
         if 'player1_id' in values and v == values['player1_id']:
@@ -279,7 +279,7 @@ async def list_players(
 ):
     """
     List all players with pagination and filtering.
-    
+
     - **page**: Page number (default: 1)
     - **per_page**: Items per page (default: 20, max: 100)
     - **sort_by**: Sort field (elo_rating, name, games_played, created_at)
@@ -298,7 +298,7 @@ async def create_player(
 ):
     """
     Create a new player.
-    
+
     - **name**: Player name (required, 1-100 characters)
     - **email**: Player email (optional, for notifications)
     """
@@ -372,9 +372,9 @@ async def create_game(
 ):
     """
     Record a new game and update player ratings.
-    
+
     - **player1_id**: First player ID
-    - **player2_id**: Second player ID  
+    - **player2_id**: Second player ID
     - **winner_id**: Winner player ID (must be player1_id or player2_id)
     - **notes**: Optional game notes
     """
@@ -467,7 +467,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "message": error["msg"],
             "code": error["type"]
         })
-    
+
     return JSONResponse(
         status_code=422,
         content={
@@ -521,26 +521,26 @@ async def custom_swagger_ui_html():
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
-    
+
     openapi_schema = get_openapi(
         title="Foosball ELO Tracker API",
         version="1.0.0",
         description="A comprehensive API for tracking foosball games and managing player ratings using ELO and TrueSkill systems.",
         routes=app.routes,
     )
-    
+
     # Add custom info
     openapi_schema["info"]["x-logo"] = {
         "url": "https://foosball.company.com/logo.png"
     }
-    
+
     # Add server information
     openapi_schema["servers"] = [
         {"url": "https://api.foosball.company.com", "description": "Production server"},
         {"url": "https://api-staging.foosball.company.com", "description": "Staging server"},
         {"url": "http://localhost:8000", "description": "Development server"}
     ]
-    
+
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 

@@ -80,10 +80,7 @@ class TestCORSHeaders:
 
     def test_cors_headers_with_origin(self, client: TestClient):
         """Test that CORS headers are present when origin is provided"""
-        response = client.get(
-            "/health",
-            headers={"Origin": "http://localhost:3000"}
-        )
+        response = client.get("/health", headers={"Origin": "http://localhost:3000"})
 
         assert response.status_code == 200
         # CORS headers should be present when origin is provided
@@ -96,7 +93,7 @@ class TestCORSHeaders:
             headers={
                 "Origin": "http://localhost:3000",
                 "Access-Control-Request-Method": "GET",
-            }
+            },
         )
 
         # Should not return an error
