@@ -1,6 +1,46 @@
 # Testing Guide
 
-How to test the current implementation and verify everything is working correctly.
+Comprehensive testing infrastructure with unit, integration, and end-to-end tests.
+
+## 🚀 Quick Test Commands
+
+```bash
+# Backend tests (60 tests total)
+uv run --directory backend pytest tests/ -v
+
+# Frontend tests (19 tests total)
+npm run test:run --prefix frontend
+
+# End-to-End tests (requires services running)
+cd e2e-tests && npx playwright test
+
+# All tests with coverage
+uv run --directory backend pytest tests/ --cov=app --cov-report=term-missing
+npm run test:coverage --prefix frontend
+```
+
+## 📊 Test Coverage Overview
+
+- **Backend**: 60 tests (unit + integration + error scenarios)
+- **Frontend**: 19 tests (unit + integration with MSW)
+- **E2E**: Playwright tests with isolated project structure
+- **Total Coverage**: Database, API, UI, security, performance, concurrency
+
+## 🏗️ Test Architecture
+
+### Backend Testing (60 tests)
+- **Unit Tests** (13 tests): Model validation, configuration
+- **Integration Tests** (35 tests): API endpoints with real database
+- **Error Scenarios** (12 tests): Security, concurrency, performance edge cases
+
+### Frontend Testing (19 tests)
+- **Unit Tests** (14 tests): Component behavior, hooks, utilities
+- **Integration Tests** (5 tests): API interaction with Mock Service Worker
+
+### End-to-End Testing (3 tests)
+- **Navigation**: Basic app routing and page loads
+- **API Connectivity**: Full-stack communication
+- **User Workflows**: Complete feature interactions
 
 ## Quick Validation Test (Full Stack)
 

@@ -1,0 +1,14 @@
+{
+  "name": "foosball-e2e-tests",
+  "private": true,
+  "version": "1.0.0",
+  "description": "End-to-end tests for Foosball Tracker",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.1"
+  }
+}

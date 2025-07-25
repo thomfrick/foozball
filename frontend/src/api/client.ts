@@ -37,6 +37,11 @@ class ApiClient {
         )
       }
 
+      // Handle empty responses (like 204 No Content)
+      if (response.status === 204) {
+        return null
+      }
+      
       return response.json()
     } catch (error) {
       if (error instanceof Error) {

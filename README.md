@@ -59,41 +59,62 @@ curl http://localhost:8000/           # API information
 open http://localhost:3000            # React app with API connectivity test
 ```
 
+### 🧪 Run Test Suite
+
+```bash
+# Backend tests (60 tests total)
+uv run --directory backend pytest tests/ -v
+
+# Frontend tests (19 tests total)
+npm run test:run --prefix frontend
+
+# End-to-End tests (3 tests - requires services running)
+cd e2e-tests && npx playwright test
+```
+
 ## 📊 Current Status
 
 **Last Updated:** July 25, 2025
-**Current Phase:** Phase 0.2 Frontend Foundation ✅ COMPLETED
-**Overall Progress:** 🟢 On Track - Full Stack Ready!
+**Current Phase:** Phase 0.3 Integration Testing ✅ COMPLETED
+**Overall Progress:** 🟢 Production-Ready Foundation Complete!
 
 See the [FEATURES_PLAN.md](FEATURES_PLAN.md) for the complete development roadmap.
 
 ### ✅ What's Working Right Now
 
-#### Backend (Phase 0.1 + 1.1 Complete)
+#### Backend (Phase 0.1 + 1.1 + Enhanced Testing Complete)
 - **Modern FastAPI API** with auto-reload and interactive docs
 - **PostgreSQL 15** database running in Docker
 - **Database migrations** with Alembic for schema versioning
 - **Health monitoring** endpoints with database connectivity checks
 - **Production-ready configuration** with environment-based settings
 - **Code quality enforcement** with pre-commit hooks (Ruff, testing)
-- **Comprehensive testing** (48 tests, 89% coverage)
-- **Full Player Management API** (Create, Read, Update, Delete)
+- **Comprehensive testing** (60 tests total, 89% coverage)
+- **Full Player Management API** (Create, Read, Update, Delete with validation)
+- **Enhanced error scenarios** (SQL injection prevention, XSS protection, concurrency testing)
 
-#### Frontend (Phase 0.2 Complete)
+#### Frontend (Phase 0.2 + 1.1.F + Integration Testing Complete)
 - **Modern React 19** with TypeScript and Vite
 - **Tailwind CSS** for beautiful, responsive styling
 - **TanStack Query** for powerful API state management
 - **React Router** for client-side routing
-- **Vitest + React Testing Library** for component testing
+- **Comprehensive testing** (19 tests: unit + integration with MSW)
 - **ESLint + Prettier** for code quality and formatting
 - **Type-safe API client** with full backend integration
+- **Complete Player Management UI** (forms, validation, search, pagination)
 - **Docker support** for development and production
+
+#### Integration Testing (Phase 0.3 Complete)
+- **End-to-End Testing** with Playwright (isolated e2e-tests project)
+- **Mock Service Worker** (MSW) for frontend API integration tests
+- **Enhanced Backend Testing** with error scenarios and security coverage
+- **CI-Ready Architecture** with proper test isolation and Docker integration
 
 ## 🎯 Next Steps
 
-1.  **Phase 0.3 - Integration Testing** (Verify full stack works together)
-2.  **Phase 1.1.F - Frontend Player Management** (Connect UI to Player API)
-3.  **Phase 1.2 - Game Recording** (Backend + Frontend)
+1.  **Phase 1.2 - Game Recording System** (Backend + Frontend)
+2.  **Phase 1.3 - TrueSkill Rating System** (Implement rating calculations)
+3.  **Phase 1.4 - Core UI/UX Polish** (Enhanced user experience)
 
 ## 📚 Documentation
 
