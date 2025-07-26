@@ -30,7 +30,11 @@ class TestErrorBoundary extends React.Component<
   },
   { hasError: boolean; error?: Error }
 > {
-  constructor(props: React.PropsWithChildren<{ onError?: (error: Error, errorInfo: React.ErrorInfo) => void }>) {
+  constructor(
+    props: React.PropsWithChildren<{
+      onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+    }>
+  ) {
     super(props)
     this.state = { hasError: false }
   }

@@ -54,7 +54,7 @@ describe('HomePage', () => {
     )
 
     expect(
-      screen.getByText(/phase 0\.2 frontend foundation complete/i)
+      screen.getByText(/phase 1\.3 trueskill system complete/i)
     ).toBeInTheDocument()
   })
 })

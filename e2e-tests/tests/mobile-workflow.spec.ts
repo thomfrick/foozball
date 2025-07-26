@@ -3,8 +3,10 @@
 
 import { test, expect, devices } from '@playwright/test'
 
+// Configure iPhone 12 simulation for all tests in this file
+test.use({ ...devices['iPhone 12'] })
+
 test.describe('Mobile Game Recording Workflow', () => {
-  test.use({ ...devices['iPhone 12'] })
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/')

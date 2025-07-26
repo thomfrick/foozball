@@ -62,10 +62,10 @@ open http://localhost:3000            # React app with API connectivity test
 ### 🧪 Run Test Suite
 
 ```bash
-# Backend tests (60 tests total)
+# Backend tests (119+ tests total)
 uv run --directory backend pytest tests/ -v
 
-# Frontend tests (19 tests total)
+# Frontend tests (155+ tests total)
 npm run test:run --prefix frontend
 
 # End-to-End tests (3 tests - requires services running)
@@ -74,47 +74,49 @@ cd e2e-tests && npx playwright test
 
 ## 📊 Current Status
 
-**Last Updated:** July 25, 2025
-**Current Phase:** Phase 0.3 Integration Testing ✅ COMPLETED
-**Overall Progress:** 🟢 Production-Ready Foundation Complete!
+**Last Updated:** July 26, 2025
+**Current Phase:** Phase 1.3 TrueSkill System ✅ COMPLETED
+**Overall Progress:** 🟢 Full MVP with TrueSkill Ratings Complete!
 
 See the [FEATURES_PLAN.md](FEATURES_PLAN.md) for the complete development roadmap.
 
 ### ✅ What's Working Right Now
 
-#### Backend (Phase 0.1 + 1.1 + Enhanced Testing Complete)
+#### Backend MVP Complete (Phases 0.1 → 1.3)
 - **Modern FastAPI API** with auto-reload and interactive docs
-- **PostgreSQL 15** database running in Docker
+- **PostgreSQL 15** database running in Docker with full schema
+- **Player Management API** - Complete CRUD with validation and soft deletes
+- **Game Recording API** - Full game tracking with player validation
+- **TrueSkill Rating System** - Microsoft TrueSkill with automatic rating updates
+- **Rating History Tracking** - Complete audit trail of all rating changes
 - **Database migrations** with Alembic for schema versioning
-- **Health monitoring** endpoints with database connectivity checks
+- **Comprehensive testing** (119+ tests total, 90%+ coverage)
 - **Production-ready configuration** with environment-based settings
-- **Code quality enforcement** with pre-commit hooks (Ruff, testing)
-- **Comprehensive testing** (60 tests total, 89% coverage)
-- **Full Player Management API** (Create, Read, Update, Delete with validation)
-- **Enhanced error scenarios** (SQL injection prevention, XSS protection, concurrency testing)
 
-#### Frontend (Phase 0.2 + 1.1.F + Integration Testing Complete)
+#### Frontend MVP Complete (Phases 0.2 → 1.3)
 - **Modern React 19** with TypeScript and Vite
-- **Tailwind CSS** for beautiful, responsive styling
-- **TanStack Query** for powerful API state management
-- **React Router** for client-side routing
-- **Comprehensive testing** (19 tests: unit + integration with MSW)
-- **ESLint + Prettier** for code quality and formatting
-- **Type-safe API client** with full backend integration
-- **Complete Player Management UI** (forms, validation, search, pagination)
-- **Docker support** for development and production
+- **Complete Player Management** - Add, edit, delete, search with pagination
+- **Complete Game Recording** - Full game entry with player selection
+- **TrueSkill Leaderboard** - Professional ranking with uncertainty indicators
+- **Rating Displays** - Beautiful TrueSkill visualization with tooltips
+- **Responsive Design** - Mobile-first with Tailwind CSS
+- **Type-safe API integration** with TanStack Query
+- **Comprehensive testing** (155+ tests passing)
 
-#### Integration Testing (Phase 0.3 Complete)
-- **End-to-End Testing** with Playwright (isolated e2e-tests project)
-- **Mock Service Worker** (MSW) for frontend API integration tests
-- **Enhanced Backend Testing** with error scenarios and security coverage
-- **CI-Ready Architecture** with proper test isolation and Docker integration
+#### Advanced Features Complete
+- **TrueSkill Algorithm** - Accurate skill assessment (not just win/loss)
+- **Conservative Ratings** - 99.7% confidence intervals (μ - 3σ)
+- **Uncertainty Visualization** - High/Medium/Low certainty indicators
+- **Educational Tooltips** - Explains TrueSkill system to users
+- **Rating History** - Complete audit trail of rating changes
+- **Professional UI/UX** - Polished interface with accessibility features
 
 ## 🎯 Next Steps
 
-1.  **Phase 1.2 - Game Recording System** (Backend + Frontend)
-2.  **Phase 1.3 - TrueSkill Rating System** (Implement rating calculations)
-3.  **Phase 1.4 - Core UI/UX Polish** (Enhanced user experience)
+1.  **Phase 1.4 - Core UI/UX Polish** (Navigation, dark mode, accessibility)
+2.  **Phase 2.1 - Team Games (2v2)** (TrueSkill team ratings)
+3.  **Phase 2.2 - Data Visualization** (Rating progression charts)
+4.  **Phase 2.3 - Enhanced Statistics** (Head-to-head, trends, analytics)
 
 ## 📚 Documentation
 

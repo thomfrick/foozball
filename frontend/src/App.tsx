@@ -4,6 +4,7 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import AboutPage from './pages/AboutPage'
 import HomePage from './pages/HomePage'
+import LeaderboardPage from './pages/LeaderboardPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PlayersPage from './pages/PlayersPage'
 
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/players" element={<PlayersPage />} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -149,11 +149,12 @@ frontend/
 - **✅ Phase 1.2 Complete**: Game Recording Backend (CRUD operations)
 - **✅ Phase 1.2.F Complete**: Game Recording Frontend (Complete UI)
 - **✅ Phase 1.2.T Complete**: Comprehensive Testing Suite (unit, integration, E2E)
-- **🎯 Phase 1.3 Starting**: Basic TrueSkill Rating System
-- **Database**: Players and Games tables with TrueSkill rating fields
-- **API Endpoints**: `/players`, `/games` CRUD, `/health`, `/ready`, `/docs`
-- **Frontend**: Complete player management and game recording UI
-- **Test Coverage**: Backend 90%+, Frontend 20+ tests passing
+- **✅ Phase 1.3 Complete**: Basic TrueSkill Rating System (Full Implementation)
+- **Database**: Players, Games, and RatingHistory tables with complete TrueSkill implementation
+- **API Endpoints**: `/players`, `/games` CRUD, `/health`, `/ready`, `/docs` with TrueSkill integration
+- **Frontend**: Complete player management, game recording, and TrueSkill leaderboard UI
+- **TrueSkill Features**: Automatic rating updates, leaderboard, uncertainty indicators, tooltips
+- **Test Coverage**: Backend 119+ tests (90%+), Frontend 155+ tests passing
 - **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
 
 ### Key Patterns
@@ -164,8 +165,14 @@ frontend/
 - **Pagination**: Built-in pagination for list endpoints with metadata
 - **Health Checks**: Separate `/health` (basic) and `/ready` (database check) endpoints
 
-### Frontend Features (Phase 1.1.F)
+### Frontend Features (Phases 1.1.F → 1.3.F)
 - **Player Management**: Complete CRUD interface with forms, validation, and error handling
+- **Game Recording**: Full game entry with player selection and winner validation
+- **TrueSkill Leaderboard**: Professional ranking system with conservative ratings (μ - 3σ)
+- **Rating Displays**: Beautiful TrueSkill visualization in player lists and profiles
+- **Uncertainty Indicators**: Visual High/Medium/Low certainty levels based on sigma
+- **Educational Tooltips**: Comprehensive explanations of TrueSkill algorithm
+- **Navigation**: Routing for /players, /leaderboard, /about with clean URLs
 - **Search & Filtering**: Debounced search with pagination (300ms delay to reduce API calls)
 - **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
 - **Modal Dialogs**: Focus management, escape key handling, and click-outside closing

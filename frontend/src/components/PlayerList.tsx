@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { usePlayers } from '../hooks/useApi'
 import { useDebounce } from '../hooks/useDebounce'
 import type { Player } from '../types/player'
+import { CompactTrueSkillRating } from './TrueSkillRating'
 
 interface PlayerListProps {
   onPlayerSelect?: (player: Player) => void
@@ -50,10 +51,6 @@ export default function PlayerList({
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
-  }
-
-  const formatRating = (mu: number, sigma: number) => {
-    return `${mu.toFixed(1)} ± ${sigma.toFixed(1)}`
   }
 
   if (isLoading) {
@@ -146,13 +143,7 @@ export default function PlayerList({
                       )}
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">
-                        Rating:{' '}
-                        {formatRating(
-                          player.trueskill_mu,
-                          player.trueskill_sigma
-                        )}
-                      </p>
+                      <CompactTrueSkillRating player={player} />
                       <p className="text-xs text-gray-500">
                         {player.games_played} games •{' '}
                         {player.win_percentage.toFixed(1)}% wins
@@ -172,13 +163,7 @@ export default function PlayerList({
                       )}
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">
-                        Rating:{' '}
-                        {formatRating(
-                          player.trueskill_mu,
-                          player.trueskill_sigma
-                        )}
-                      </p>
+                      <CompactTrueSkillRating player={player} />
                       <p className="text-xs text-gray-500">
                         {player.games_played} games •{' '}
                         {player.win_percentage.toFixed(1)}% wins
