@@ -56,13 +56,15 @@ describe('AddPlayerForm Integration Tests', () => {
     const nameInput = screen.getByLabelText(/name/i)
     const submitButton = screen.getByRole('button', { name: /create player/i })
 
-    // Try to create player with existing name
-    fireEvent.change(nameInput, { target: { value: 'Alice Johnson' } })
+    // Try to create player with existing name (from fixtures)
+    fireEvent.change(nameInput, { target: { value: 'Rookie Player' } })
     fireEvent.click(submitButton)
 
     // Wait for error message
     await waitFor(() => {
-      expect(screen.getByText(/name already exists/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/player with this name already exists/i)
+      ).toBeInTheDocument()
     })
 
     // Button should not be disabled after error
@@ -76,14 +78,16 @@ describe('AddPlayerForm Integration Tests', () => {
     const emailInput = screen.getByLabelText(/email/i)
     const submitButton = screen.getByRole('button', { name: /create player/i })
 
-    // Try to create player with existing email
+    // Try to create player with existing email (from fixtures)
     fireEvent.change(nameInput, { target: { value: 'Different Name' } })
-    fireEvent.change(emailInput, { target: { value: 'alice@example.com' } })
+    fireEvent.change(emailInput, { target: { value: 'rookie@example.com' } })
     fireEvent.click(submitButton)
 
     // Wait for error message
     await waitFor(() => {
-      expect(screen.getByText(/email already exists/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/player with this email already exists/i)
+      ).toBeInTheDocument()
     })
   })
 

@@ -3,39 +3,13 @@
 
 import { http, HttpResponse } from 'msw'
 import { Player } from '../../types/player'
+import { PlayerFixtures } from '../fixtures'
 
-// Mock data for testing
-const mockPlayers: Player[] = [
-  {
-    id: 1,
-    name: 'Alice Johnson',
-    email: 'alice@example.com',
-    trueskill_mu: 26.5,
-    trueskill_sigma: 7.2,
-    games_played: 15,
-    wins: 9,
-    losses: 6,
-    win_percentage: 60.0,
-    is_active: true,
-    created_at: '2024-01-15T10:30:00Z',
-  },
-  {
-    id: 2,
-    name: 'Bob Smith',
-    email: 'bob@example.com',
-    trueskill_mu: 23.8,
-    trueskill_sigma: 8.1,
-    games_played: 12,
-    wins: 5,
-    losses: 7,
-    win_percentage: 41.7,
-    is_active: true,
-    created_at: '2024-01-10T14:20:00Z',
-  },
-]
+// Initialize with diverse test data
+const mockPlayers: Player[] = PlayerFixtures.createDiversePlayersData()
 
 let playersData = [...mockPlayers]
-let nextId = 3
+let nextId = mockPlayers.length + 1
 
 export const handlers = [
   // GET /api/v1/players
@@ -176,5 +150,13 @@ export const handlers = [
 // Reset function for test isolation
 export const resetMockData = () => {
   playersData = [...mockPlayers]
-  nextId = 3
+  nextId = mockPlayers.length + 1
 }
+
+// Additional utility functions for tests
+export const setMockPlayersData = (players: Player[]) => {
+  playersData = [...players]
+  nextId = Math.max(...players.map((p) => p.id), 0) + 1
+}
+
+export const getMockPlayersData = () => [...playersData]

@@ -8,6 +8,9 @@ from app.db.database import get_db
 from app.db.test_database import test_db
 from app.main import app
 
+# Import fixtures to make them available to all tests
+from tests.fixtures import *  # noqa: F403
+
 
 def override_get_db():
     """Override database dependency for tests"""

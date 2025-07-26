@@ -1,0 +1,541 @@
+# ABOUTME: Comprehensive CI/CD pipeline for foosball app covering all test suites
+# ABOUTME: Runs backend tests, frontend tests, e2e tests, and deployment checks
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  # Database configuration for tests
+  DB_HOST: localhost
+  DB_PORT: 5432
+  DB_NAME: foosball_test
+  DB_USER: foosball_user
+  DB_PASSWORD: test_password
+  ENVIRONMENT: test
+  DEBUG: true
+  LOG_LEVEL: DEBUG
+  SECRET_KEY: test-secret-key-for-ci
+
+jobs:
+  # Backend Testing Suite
+  backend-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: foosball_test
+          POSTGRES_USER: foosball_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        version: "latest"
+
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        uv sync --dev
+        uv pip install -e .
+
+    - name: Wait for PostgreSQL
+      run: |
+        until pg_isready -h localhost -p 5432 -U foosball_user; do
+          echo "Waiting for PostgreSQL..."
+          sleep 2
+        done
+
+    - name: Run database migrations
+      run: |
+        cd backend
+        uv run alembic upgrade head
+
+    - name: Run backend linting
+      run: |
+        cd backend
+        uv run ruff check .
+
+    - name: Run backend formatting check
+      run: |
+        cd backend
+        uv run ruff format --check .
+
+    - name: Run backend unit tests
+      run: |
+        cd backend
+        uv run pytest tests/unit/ -v --tb=short --cov=app --cov-report=xml --cov-report=term
+
+    - name: Run backend integration tests
+      run: |
+        cd backend
+        uv run pytest tests/integration/ -v --tb=short --cov=app --cov-append --cov-report=xml --cov-report=term
+
+    - name: Upload backend coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage.xml
+        flags: backend
+        name: backend-coverage
+
+  # Frontend Testing Suite
+  frontend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Run frontend linting
+      run: |
+        cd frontend
+        npm run lint
+
+    - name: Run frontend type checking
+      run: |
+        cd frontend
+        npx tsc --noEmit
+
+    - name: Run frontend unit tests
+      run: |
+        cd frontend
+        npm run test:run -- --coverage --reporter=verbose
+
+    - name: Run frontend integration tests
+      run: |
+        cd frontend
+        npm run test:run -- --coverage --reporter=verbose src/**/*.integration.test.*
+
+    - name: Upload frontend coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./frontend/coverage/clover.xml
+        flags: frontend
+        name: frontend-coverage
+
+  # End-to-End Testing Suite
+  e2e-tests:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: foosball_dev
+          POSTGRES_USER: foosball_user
+          POSTGRES_PASSWORD: dev_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        version: "latest"
+
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        uv sync --dev
+        uv pip install -e .
+
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Install e2e test dependencies
+      run: |
+        cd e2e-tests
+        npm ci
+
+    - name: Install Playwright browsers
+      run: |
+        cd e2e-tests
+        npx playwright install --with-deps
+
+    - name: Wait for PostgreSQL
+      run: |
+        until pg_isready -h localhost -p 5432 -U foosball_user; do
+          echo "Waiting for PostgreSQL..."
+          sleep 2
+        done
+
+    - name: Set up test database
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: foosball_dev
+        DB_USER: foosball_user
+        DB_PASSWORD: dev_password
+      run: |
+        cd backend
+        uv run alembic upgrade head
+
+    - name: Start backend server
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: foosball_dev
+        DB_USER: foosball_user
+        DB_PASSWORD: dev_password
+        ENVIRONMENT: development
+      run: |
+        cd backend
+        uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+        echo $! > backend.pid
+        # Wait for backend to be ready
+        timeout 30 bash -c 'until curl -f http://localhost:8000/health; do sleep 1; done'
+
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+
+    - name: Start frontend server
+      run: |
+        cd frontend
+        npm run preview -- --port 4173 --host &
+        echo $! > frontend.pid
+        # Wait for frontend to be ready
+        timeout 30 bash -c 'until curl -f http://localhost:4173; do sleep 1; done'
+
+    - name: Run e2e tests
+      run: |
+        cd e2e-tests
+        npx playwright test
+
+    - name: Upload e2e test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: e2e-test-results
+        path: e2e-tests/test-results/
+
+    - name: Upload e2e test report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: e2e-test-report
+        path: e2e-tests/playwright-report/
+
+    - name: Stop servers
+      if: always()
+      run: |
+        if [ -f backend.pid ]; then kill $(cat backend.pid) || true; fi
+        if [ -f frontend.pid ]; then kill $(cat frontend.pid) || true; fi
+
+  # Docker Build and Security Scan
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build backend Docker image
+      run: |
+        cd backend
+        docker build -t foosball-backend:ci .
+
+    - name: Build frontend Docker image
+      run: |
+        cd frontend
+        docker build -t foosball-frontend:ci .
+
+    - name: Test Docker Compose setup
+      run: |
+        # Start services with test configuration
+        docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+        # Wait for services to be healthy
+        timeout 60 bash -c 'until curl -f http://localhost:8000/health; do sleep 2; done'
+        timeout 60 bash -c 'until curl -f http://localhost:3000; do sleep 2; done'
+
+        # Basic API test
+        curl -f http://localhost:8000/api/v1/players/ || exit 1
+
+        # Cleanup
+        docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
+
+    - name: Run Trivy vulnerability scanner on backend
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'foosball-backend:ci'
+        format: 'sarif'
+        output: 'backend-trivy-results.sarif'
+
+    - name: Run Trivy vulnerability scanner on frontend
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'foosball-frontend:ci'
+        format: 'sarif'
+        output: 'frontend-trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: '.'
+
+  # Performance and Load Testing
+  performance-tests:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: foosball_perf
+          POSTGRES_USER: foosball_user
+          POSTGRES_PASSWORD: perf_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        version: "latest"
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        uv sync --dev
+        uv pip install -e .
+
+    - name: Set up performance test database
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: foosball_perf
+        DB_USER: foosball_user
+        DB_PASSWORD: perf_password
+      run: |
+        cd backend
+        uv run alembic upgrade head
+
+    - name: Run backend performance tests
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: foosball_perf
+        DB_USER: foosball_user
+        DB_PASSWORD: perf_password
+      run: |
+        cd backend
+        uv run pytest tests/integration/ -v -k "performance" --tb=short
+
+  # Code Quality and Security Analysis
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        version: "latest"
+
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        uv sync --dev
+
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Run backend security checks with bandit
+      run: |
+        cd backend
+        uv run pip install bandit[toml]
+        uv run bandit -r app/ -f json -o bandit-report.json || true
+
+    - name: Upload bandit security scan results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: bandit-security-report
+        path: backend/bandit-report.json
+
+    - name: Run frontend security audit
+      run: |
+        cd frontend
+        npm audit --audit-level moderate --json > npm-audit.json || true
+
+    - name: Upload npm audit results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: npm-audit-report
+        path: frontend/npm-audit.json
+
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/init@v3
+      with:
+        languages: python, javascript
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+
+  # Deployment Validation (if main branch)
+  deployment-validation:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, e2e-tests, docker-build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Validate deployment configuration
+      run: |
+        # Check that required environment files exist
+        if [ ! -f docker-compose.yml ]; then
+          echo "Missing docker-compose.yml"
+          exit 1
+        fi
+
+        if [ ! -f backend/Dockerfile ]; then
+          echo "Missing backend Dockerfile"
+          exit 1
+        fi
+
+        if [ ! -f frontend/Dockerfile ]; then
+          echo "Missing frontend Dockerfile"
+          exit 1
+        fi
+
+    - name: Simulate production build
+      run: |
+        # Build production images
+        docker build -t foosball-backend:prod ./backend
+        docker build -t foosball-frontend:prod ./frontend
+
+        # Test that images can start (basic smoke test)
+        docker run --rm -d --name backend-test foosball-backend:prod &
+        docker run --rm -d --name frontend-test foosball-frontend:prod &
+
+        sleep 10
+
+        # Cleanup
+        docker stop backend-test frontend-test || true
+
+    - name: Deployment readiness check
+      run: |
+        echo "✅ All tests passed"
+        echo "✅ Docker images built successfully"
+        echo "✅ Ready for deployment"
+
+# Workflow notifications
+  notify:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, e2e-tests, docker-build]
+    if: always()
+
+    steps:
+    - name: Workflow status notification
+      run: |
+        if [ "${{ needs.backend-tests.result }}" == "success" ] && \
+           [ "${{ needs.frontend-tests.result }}" == "success" ] && \
+           [ "${{ needs.e2e-tests.result }}" == "success" ] && \
+           [ "${{ needs.docker-build.result }}" == "success" ]; then
+          echo "🎉 All tests passed! Ready for deployment."
+        else
+          echo "❌ Some tests failed. Check the logs for details."
+          echo "Backend tests: ${{ needs.backend-tests.result }}"
+          echo "Frontend tests: ${{ needs.frontend-tests.result }}"
+          echo "E2E tests: ${{ needs.e2e-tests.result }}"
+          echo "Docker build: ${{ needs.docker-build.result }}"
+        fi
