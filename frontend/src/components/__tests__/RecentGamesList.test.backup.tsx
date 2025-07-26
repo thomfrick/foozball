@@ -2,7 +2,7 @@
 // ABOUTME: Tests game display, pagination, and interaction handling
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import RecentGamesList from '../RecentGamesList'
 
@@ -142,7 +142,7 @@ describe('RecentGamesList', () => {
 
     expect(screen.getByText('Recent Games')).toBeInTheDocument()
     expect(screen.getByText('2 total games')).toBeInTheDocument()
-    
+
     // Check for player names in winner badges (more specific)
     expect(screen.getByText('🏆 Player 1')).toBeInTheDocument()
     expect(screen.getByText('🏆 Player 2')).toBeInTheDocument()

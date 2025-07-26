@@ -30,7 +30,7 @@ class TestErrorBoundary extends React.Component<
   },
   { hasError: boolean; error?: Error }
 > {
-  constructor(props: any) {
+  constructor(props: React.PropsWithChildren<{ onError?: (error: Error, errorInfo: React.ErrorInfo) => void }>) {
     super(props)
     this.state = { hasError: false }
   }
@@ -258,7 +258,7 @@ describe('Error Boundary and Loading States Integration Tests', () => {
         })
       )
 
-      const { onError } = renderWithProviders(<GameHistory />, {
+      renderWithProviders(<GameHistory />, {
         withErrorBoundary: true,
       })
 
@@ -274,7 +274,7 @@ describe('Error Boundary and Loading States Integration Tests', () => {
     })
 
     it('shows complex loading states correctly', async () => {
-      let resolvePromise: (value: any) => void
+      let resolvePromise: (value: unknown) => void
       const delayedPromise = new Promise((resolve) => {
         resolvePromise = resolve
       })
@@ -372,7 +372,7 @@ describe('Error Boundary and Loading States Integration Tests', () => {
     })
 
     it('shows loading state during form submission', async () => {
-      let resolvePromise: (value: any) => void
+      let resolvePromise: (value: unknown) => void
       const delayedPromise = new Promise((resolve) => {
         resolvePromise = resolve
       })
@@ -456,7 +456,7 @@ describe('Error Boundary and Loading States Integration Tests', () => {
         })
       )
 
-      const { onError } = renderWithProviders(<AddGameForm />, {
+      renderWithProviders(<AddGameForm />, {
         withErrorBoundary: true,
       })
 
@@ -502,7 +502,7 @@ describe('Error Boundary and Loading States Integration Tests', () => {
       expect(searchInput).toBeInTheDocument()
 
       // Mock delayed search response
-      let resolvePromise: (value: any) => void
+      let resolvePromise: (value: unknown) => void
       const delayedPromise = new Promise((resolve) => {
         resolvePromise = resolve
       })
@@ -559,7 +559,7 @@ describe('Error Boundary and Loading States Integration Tests', () => {
     })
 
     it('shows loading skeleton during initial load', async () => {
-      let resolvePromise: (value: any) => void
+      let resolvePromise: (value: unknown) => void
       const delayedPromise = new Promise((resolve) => {
         resolvePromise = resolve
       })

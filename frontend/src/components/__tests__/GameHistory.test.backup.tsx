@@ -133,7 +133,7 @@ describe('GameHistory', () => {
 
     // Should have "All Players" option plus individual players
     expect(screen.getByText('All Players')).toBeInTheDocument()
-    
+
     // Check for player options in the filter dropdown specifically
     const playerOption1 = filterSelect.querySelector('option[value="1"]')
     const playerOption2 = filterSelect.querySelector('option[value="2"]')

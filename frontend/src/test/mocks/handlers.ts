@@ -2,8 +2,8 @@
 // ABOUTME: Defines mock API endpoints that mirror the real backend API
 
 import { http, HttpResponse } from 'msw'
-import { Player } from '../../types/player'
 import { Game } from '../../types/game'
+import { Player } from '../../types/player'
 import { PlayerFixtures } from '../fixtures'
 
 // Initialize with diverse test data
@@ -133,31 +133,25 @@ export const handlers = [
   }),
 
   // PUT /api/v1/players/:id
-  http.put(
-    '*/api/v1/players/:id',
-    async ({ params, request }) => {
-      const id = parseInt(params.id as string)
-      const body = (await request.json()) as { name?: string; email?: string }
+  http.put('*/api/v1/players/:id', async ({ params, request }) => {
+    const id = parseInt(params.id as string)
+    const body = (await request.json()) as { name?: string; email?: string }
 
-      const playerIndex = playersData.findIndex((p) => p.id === id)
-      if (playerIndex === -1) {
-        return HttpResponse.json(
-          { detail: 'Player not found' },
-          { status: 404 }
-        )
-      }
-
-      const player = playersData[playerIndex]
-      const updatedPlayer = {
-        ...player,
-        ...body,
-      }
-
-      playersData[playerIndex] = updatedPlayer
-
-      return HttpResponse.json(updatedPlayer)
+    const playerIndex = playersData.findIndex((p) => p.id === id)
+    if (playerIndex === -1) {
+      return HttpResponse.json({ detail: 'Player not found' }, { status: 404 })
     }
-  ),
+
+    const player = playersData[playerIndex]
+    const updatedPlayer = {
+      ...player,
+      ...body,
+    }
+
+    playersData[playerIndex] = updatedPlayer
+
+    return HttpResponse.json(updatedPlayer)
+  }),
 
   // DELETE /api/v1/players/:id
   http.delete('*/api/v1/players/:id', ({ params }) => {
@@ -212,9 +206,13 @@ export const handlers = [
     }
 
     // Validate players exist
-    const player1 = playersData.find(p => p.id === body.player1_id && p.is_active)
-    const player2 = playersData.find(p => p.id === body.player2_id && p.is_active)
-    
+    const player1 = playersData.find(
+      (p) => p.id === body.player1_id && p.is_active
+    )
+    const player2 = playersData.find(
+      (p) => p.id === body.player2_id && p.is_active
+    )
+
     if (!player1 || !player2) {
       return HttpResponse.json(
         { detail: 'One or more players not found' },
@@ -223,7 +221,10 @@ export const handlers = [
     }
 
     // Validate winner is one of the players
-    if (body.winner_id !== body.player1_id && body.winner_id !== body.player2_id) {
+    if (
+      body.winner_id !== body.player1_id &&
+      body.winner_id !== body.player2_id
+    ) {
       return HttpResponse.json(
         { detail: 'Winner must be one of the selected players' },
         { status: 400 }
@@ -269,7 +270,7 @@ export const handlers = [
 
     // Filter games for the specific player
     const playerGames = gamesData.filter(
-      g => g.player1_id === playerId || g.player2_id === playerId
+      (g) => g.player1_id === playerId || g.player2_id === playerId
     )
 
     const total = playerGames.length

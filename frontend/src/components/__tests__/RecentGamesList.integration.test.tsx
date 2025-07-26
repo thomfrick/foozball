@@ -5,16 +5,10 @@ import '../../test/setup-integration'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest'
-import RecentGamesList from '../RecentGamesList'
-import { server } from '../../test/mocks/server'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { PlayerFixtures } from '../../test/fixtures'
+import { server } from '../../test/mocks/server'
+import RecentGamesList from '../RecentGamesList'
 
 // Use the test fixtures data which matches the global MSW setup
 const mockPlayers = PlayerFixtures.createDiversePlayersData()
@@ -399,7 +393,7 @@ describe('RecentGamesList Integration Tests', () => {
     // Check that winners are highlighted with trophy emoji
     const trophyElements = screen.getAllByText(/🏆/)
     expect(trophyElements.length).toBeGreaterThan(0) // Should have trophy elements
-    
+
     // Note: Specific winner checks depend on the mock games data in the global setup
   })
 

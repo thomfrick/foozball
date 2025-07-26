@@ -2,7 +2,7 @@
 // ABOUTME: Tests filtering, pagination, player-specific views, and advanced interactions
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import {
@@ -433,7 +433,7 @@ describe('GameHistory Integration Tests', () => {
         const page2Button = screen.getByText('2')
         expect(page2Button).toHaveClass('bg-blue-600')
       })
-      
+
       // Previous button state may vary - just verify we're on page 2
       // (Previous button might be disabled depending on pagination logic)
 

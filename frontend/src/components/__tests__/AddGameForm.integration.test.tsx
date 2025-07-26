@@ -5,16 +5,10 @@ import '../../test/setup-integration'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest'
-import AddGameForm from '../AddGameForm'
-import { server } from '../../test/mocks/server'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { PlayerFixtures } from '../../test/fixtures'
+import { server } from '../../test/mocks/server'
+import AddGameForm from '../AddGameForm'
 
 // Use the test fixtures data which matches the global MSW setup
 const mockPlayers = PlayerFixtures.createDiversePlayersData()
@@ -49,8 +43,8 @@ describe('AddGameForm Integration Tests', () => {
       expect(player1Select).toBeInTheDocument()
       // Check if the first player is available in the dropdown options
       const options = player1Select.querySelectorAll('option')
-      const hasPlayer = Array.from(options).some(option => 
-        option.textContent === mockPlayers[0].name
+      const hasPlayer = Array.from(options).some(
+        (option) => option.textContent === mockPlayers[0].name
       )
       expect(hasPlayer).toBe(true)
     })
@@ -59,15 +53,21 @@ describe('AddGameForm Integration Tests', () => {
     const player1Select = screen.getByLabelText(/player 1/i)
     const player2Select = screen.getByLabelText(/player 2/i)
 
-    fireEvent.change(player1Select, { target: { value: mockPlayers[0].id.toString() } })
-    fireEvent.change(player2Select, { target: { value: mockPlayers[1].id.toString() } })
+    fireEvent.change(player1Select, {
+      target: { value: mockPlayers[0].id.toString() },
+    })
+    fireEvent.change(player2Select, {
+      target: { value: mockPlayers[1].id.toString() },
+    })
 
     // Winner dropdown should now be enabled
     const winnerSelect = screen.getByLabelText(/winner/i)
     expect(winnerSelect).not.toBeDisabled()
 
     // Select winner
-    fireEvent.change(winnerSelect, { target: { value: mockPlayers[0].id.toString() } })
+    fireEvent.change(winnerSelect, {
+      target: { value: mockPlayers[0].id.toString() },
+    })
 
     // Submit form
     const submitButton = screen.getByRole('button', { name: 'Record Game' })
@@ -103,8 +103,8 @@ describe('AddGameForm Integration Tests', () => {
       expect(player1Select).toBeInTheDocument()
       // Check if the first player is available in the dropdown options
       const options = player1Select.querySelectorAll('option')
-      const hasPlayer = Array.from(options).some(option => 
-        option.textContent === mockPlayers[0].name
+      const hasPlayer = Array.from(options).some(
+        (option) => option.textContent === mockPlayers[0].name
       )
       expect(hasPlayer).toBe(true)
     })
@@ -114,9 +114,15 @@ describe('AddGameForm Integration Tests', () => {
     const player2Select = screen.getByLabelText(/player 2/i)
     const winnerSelect = screen.getByLabelText(/winner/i)
 
-    fireEvent.change(player1Select, { target: { value: mockPlayers[0].id.toString() } })
-    fireEvent.change(player2Select, { target: { value: mockPlayers[1].id.toString() } })
-    fireEvent.change(winnerSelect, { target: { value: mockPlayers[0].id.toString() } })
+    fireEvent.change(player1Select, {
+      target: { value: mockPlayers[0].id.toString() },
+    })
+    fireEvent.change(player2Select, {
+      target: { value: mockPlayers[1].id.toString() },
+    })
+    fireEvent.change(winnerSelect, {
+      target: { value: mockPlayers[0].id.toString() },
+    })
 
     // Submit form
     const submitButton = screen.getByRole('button', { name: 'Record Game' })
@@ -124,9 +130,7 @@ describe('AddGameForm Integration Tests', () => {
 
     // Wait for error message (should show the specific API error)
     await waitFor(() => {
-      expect(
-        screen.getByText('Player validation failed')
-      ).toBeInTheDocument()
+      expect(screen.getByText('Player validation failed')).toBeInTheDocument()
     })
   })
 
@@ -147,8 +151,8 @@ describe('AddGameForm Integration Tests', () => {
       expect(player1Select).toBeInTheDocument()
       // Check if the first player is available in the dropdown options
       const options = player1Select.querySelectorAll('option')
-      const hasPlayer = Array.from(options).some(option => 
-        option.textContent === mockPlayers[0].name
+      const hasPlayer = Array.from(options).some(
+        (option) => option.textContent === mockPlayers[0].name
       )
       expect(hasPlayer).toBe(true)
     })
@@ -170,9 +174,13 @@ describe('AddGameForm Integration Tests', () => {
     // Wait for error message or check if form remains filled (indicating error occurred)
     await waitFor(() => {
       // The form should still have the selected values (not reset on error)
-      const player1Select = screen.getByLabelText(/player 1/i) as HTMLSelectElement
-      const player2Select = screen.getByLabelText(/player 2/i) as HTMLSelectElement
-      
+      const player1Select = screen.getByLabelText(
+        /player 1/i
+      ) as HTMLSelectElement
+      const player2Select = screen.getByLabelText(
+        /player 2/i
+      ) as HTMLSelectElement
+
       // Values should still be selected (form doesn't reset on error)
       expect(player1Select.value).toBe(mockPlayers[0].id.toString())
       expect(player2Select.value).toBe(mockPlayers[1].id.toString())
@@ -255,8 +263,8 @@ describe('AddGameForm Integration Tests', () => {
       () => {
         const player1Select = screen.getByLabelText(/player 1/i)
         const options = player1Select.querySelectorAll('option')
-        const hasPlayer = Array.from(options).some(option => 
-          option.textContent === mockPlayers[0].name
+        const hasPlayer = Array.from(options).some(
+          (option) => option.textContent === mockPlayers[0].name
         )
         expect(hasPlayer).toBe(true)
       },
@@ -299,8 +307,8 @@ describe('AddGameForm Integration Tests', () => {
       expect(player1Select).toBeInTheDocument()
       // Check if the first player is available in the dropdown options
       const options = player1Select.querySelectorAll('option')
-      const hasPlayer = Array.from(options).some(option => 
-        option.textContent === mockPlayers[0].name
+      const hasPlayer = Array.from(options).some(
+        (option) => option.textContent === mockPlayers[0].name
       )
       expect(hasPlayer).toBe(true)
     })
@@ -352,8 +360,8 @@ describe('AddGameForm Integration Tests', () => {
       expect(player1Select).toBeInTheDocument()
       // Check if the first player is available in the dropdown options
       const options = player1Select.querySelectorAll('option')
-      const hasPlayer = Array.from(options).some(option => 
-        option.textContent === mockPlayers[0].name
+      const hasPlayer = Array.from(options).some(
+        (option) => option.textContent === mockPlayers[0].name
       )
       expect(hasPlayer).toBe(true)
     })
@@ -366,7 +374,9 @@ describe('AddGameForm Integration Tests', () => {
     expect(winnerSelect).toBeDisabled()
 
     // Select first player
-    fireEvent.change(player1Select, { target: { value: mockPlayers[0].id.toString() } })
+    fireEvent.change(player1Select, {
+      target: { value: mockPlayers[0].id.toString() },
+    })
 
     // Winner should now be enabled (at least one player selected)
     // Wait a moment for the state to update
@@ -375,7 +385,9 @@ describe('AddGameForm Integration Tests', () => {
     })
 
     // Select second player
-    fireEvent.change(player2Select, { target: { value: mockPlayers[1].id.toString() } })
+    fireEvent.change(player2Select, {
+      target: { value: mockPlayers[1].id.toString() },
+    })
 
     // Winner should still be enabled with both players
     expect(winnerSelect).not.toBeDisabled()
@@ -389,7 +401,9 @@ describe('AddGameForm Integration Tests', () => {
     expect(optionTexts).not.toContain(mockPlayers[2].name) // Not selected as player
 
     // Change player1, winner should reset
-    fireEvent.change(player1Select, { target: { value: mockPlayers[2].id.toString() } })
+    fireEvent.change(player1Select, {
+      target: { value: mockPlayers[2].id.toString() },
+    })
 
     // Winner should reset to default
     expect(winnerSelect.value).toBe('0')
@@ -412,8 +426,8 @@ describe('AddGameForm Integration Tests', () => {
       expect(player1Select).toBeInTheDocument()
       // Check if the first player is available in the dropdown options
       const options = player1Select.querySelectorAll('option')
-      const hasPlayer = Array.from(options).some(option => 
-        option.textContent === mockPlayers[0].name
+      const hasPlayer = Array.from(options).some(
+        (option) => option.textContent === mockPlayers[0].name
       )
       expect(hasPlayer).toBe(true)
     })
