@@ -1,9 +1,11 @@
 # ABOUTME: FastAPI application entry point and configuration
 # ABOUTME: Sets up the main app instance, middleware, and route registration
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
 from app.api.v1.router import router as api_v1_router
@@ -17,6 +19,24 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+
+# Global exception handlers
+@app.exception_handler(OperationalError)
+async def operational_error_handler(request: Request, exc: OperationalError):
+    """Handle database operational errors"""
+    return JSONResponse(
+        status_code=500, content={"detail": f"Database operation failed: {str(exc)}"}
+    )
+
+
+@app.exception_handler(IntegrityError)
+async def integrity_error_handler(request: Request, exc: IntegrityError):
+    """Handle database integrity constraint errors"""
+    return JSONResponse(
+        status_code=400, content={"detail": f"Data integrity error: {str(exc)}"}
+    )
+
 
 # CORS middleware configuration
 app.add_middleware(

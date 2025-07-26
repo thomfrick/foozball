@@ -103,7 +103,9 @@ describe('PlayersPage Integration Tests', () => {
 
     // Wait for modal to close and player to appear in list
     await waitFor(() => {
-      expect(screen.queryByRole('textbox', { name: /name/i })).not.toBeInTheDocument()
+      expect(
+        screen.queryByRole('textbox', { name: /name/i })
+      ).not.toBeInTheDocument()
     })
 
     await waitFor(() => {
@@ -121,7 +123,9 @@ describe('PlayersPage Integration Tests', () => {
     })
 
     // Find Alice's row and click edit button
-    const aliceContainer = screen.getByText('Alice Johnson').closest('div[class*="p-4 border border-gray-200"]')!
+    const aliceContainer = screen
+      .getByText('Alice Johnson')
+      .closest('div[class*="p-4 border border-gray-200"]')!
     const editButton = within(aliceContainer).getByText(/edit/i)
     fireEvent.click(editButton)
 
@@ -145,7 +149,9 @@ describe('PlayersPage Integration Tests', () => {
     })
 
     // Find Bob's row and click delete button
-    const bobContainer = screen.getByText('Bob Smith').closest('div[class*="p-4 border border-gray-200"]')!
+    const bobContainer = screen
+      .getByText('Bob Smith')
+      .closest('div[class*="p-4 border border-gray-200"]')!
     const deleteButton = within(bobContainer).getByText(/delete/i)
     fireEvent.click(deleteButton)
 
@@ -155,7 +161,9 @@ describe('PlayersPage Integration Tests', () => {
     })
 
     const dialog = screen.getByRole('dialog')
-    const confirmButton = within(dialog).getByRole('button', { name: 'Delete Player' })
+    const confirmButton = within(dialog).getByRole('button', {
+      name: 'Delete Player',
+    })
     fireEvent.click(confirmButton)
 
     // Wait for modal to close and player to be removed

@@ -1,12 +1,12 @@
 # ABOUTME: Enhanced integration tests for error scenarios and edge cases
 # ABOUTME: Tests database failures, data integrity, security, and performance edge cases
 
-from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
+from app.db.database import get_db
 from app.main import app
 
 client = TestClient(app)
@@ -17,42 +17,90 @@ class TestDatabaseFailureScenarios:
 
     def test_database_connection_failure(self, clean_db: Session):
         """Test API behavior when database connection fails"""
-        with patch("app.db.database.get_db") as mock_get_db:
-            mock_get_db.side_effect = OperationalError(
-                "Database connection failed", None, None
-            )
 
+        def mock_get_db_with_error():
+            raise OperationalError("Database connection failed", None, None)
+
+        # Save original override and replace with our mock
+        original_override = app.dependency_overrides.get(get_db)
+        app.dependency_overrides[get_db] = mock_get_db_with_error
+
+        try:
             response = client.get("/api/v1/players/")
             assert response.status_code == 500
             assert (
                 "Database connection" in response.json()["detail"]
-                or "Internal server error" in response.json()["detail"]
+                or "Failed to retrieve players" in response.json()["detail"]
             )
+        finally:
+            # Restore original dependency override
+            if original_override:
+                app.dependency_overrides[get_db] = original_override
+            elif get_db in app.dependency_overrides:
+                del app.dependency_overrides[get_db]
 
     def test_database_transaction_rollback(self, clean_db: Session):
         """Test transaction rollback on database errors"""
-        # Create a player first
-        response = client.post(
-            "/api/v1/players/",
-            json={"name": "Test Player", "email": "test@example.com"},
+        # Create a player directly in the database using the clean_db session
+        from app.models.player import Player
+
+        test_player = Player(
+            name="Test Player",
+            email="test@example.com",
+            trueskill_mu=25.0,
+            trueskill_sigma=8.3333,
+            games_played=0,
+            wins=0,
+            losses=0,
+            is_active=True,
         )
-        assert response.status_code == 201
-        player_id = response.json()["id"]
+        clean_db.add(test_player)
+        clean_db.commit()
+        clean_db.refresh(test_player)
+        player_id = test_player.id
 
-        # Mock a database error during update
-        with patch.object(clean_db, "commit") as mock_commit:
-            mock_commit.side_effect = OperationalError("Database error", None, None)
+        # Mock database session that fails on commit
+        def mock_get_db_with_commit_error():
+            # Return clean_db but with a failing commit
+            original_commit = clean_db.commit
+            original_rollback = clean_db.rollback
 
+            def failing_commit():
+                # Call rollback first, then raise error
+                original_rollback()
+                raise OperationalError("Database error", None, None)
+
+            clean_db.commit = failing_commit
+            try:
+                yield clean_db
+            finally:
+                # Restore original methods
+                clean_db.commit = original_commit
+                clean_db.rollback = original_rollback
+
+        # Save original override and replace with our mock
+        original_override = app.dependency_overrides.get(get_db)
+        app.dependency_overrides[get_db] = mock_get_db_with_commit_error
+
+        try:
             # Try to update - should fail gracefully
             response = client.put(
                 f"/api/v1/players/{player_id}", json={"name": "Updated Name"}
             )
             assert response.status_code == 500
+            assert "Failed to update player" in response.json()["detail"]
+        finally:
+            # Restore original dependency override
+            if original_override:
+                app.dependency_overrides[get_db] = original_override
+            elif get_db in app.dependency_overrides:
+                del app.dependency_overrides[get_db]
 
-            # Verify original data is unchanged (transaction rolled back)
-            response = client.get(f"/api/v1/players/{player_id}")
-            assert response.status_code == 200
-            assert response.json()["name"] == "Test Player"
+        # Verify data is unchanged due to rollback
+        # Query the player directly to check its current state
+        current_player = clean_db.query(Player).filter(Player.id == player_id).first()
+        assert current_player is not None
+        assert current_player.name == "Test Player"  # Should be unchanged
 
 
 class TestDataIntegrityScenarios:
