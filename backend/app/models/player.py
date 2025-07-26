@@ -2,6 +2,7 @@
 # ABOUTME: Defines player attributes, ratings, and game statistics
 
 from sqlalchemy import Boolean, Column, DateTime, Float, Integer, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.db.database import Base
@@ -27,6 +28,9 @@ class Player(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     is_active = Column(Boolean, default=True, nullable=False)
+
+    # Relationships
+    rating_history = relationship("RatingHistory", back_populates="player")
 
     @property
     def win_percentage(self) -> float:

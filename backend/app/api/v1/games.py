@@ -9,7 +9,9 @@ from sqlalchemy.orm import Session, joinedload
 from app.db.database import get_db
 from app.models.game import Game
 from app.models.player import Player
+from app.models.rating_history import RatingHistory
 from app.schemas.game import GameCreate, GameListResponse, GameResponse
+from app.services.trueskill_service import trueskill_service
 
 router = APIRouter(prefix="/games", tags=["games"])
 
@@ -53,6 +55,12 @@ async def create_game(game_data: GameCreate, db: Session = Depends(get_db)):
                 status_code=400, detail="Winner must be one of the players in the game"
             )
 
+        # Store original ratings for history tracking
+        player1_mu_before = player1.trueskill_mu
+        player1_sigma_before = player1.trueskill_sigma
+        player2_mu_before = player2.trueskill_mu
+        player2_sigma_before = player2.trueskill_sigma
+
         # Create the game
         db_game = Game(
             player1_id=game_data.player1_id,
@@ -61,6 +69,36 @@ async def create_game(game_data: GameCreate, db: Session = Depends(get_db)):
         )
 
         db.add(db_game)
+        db.flush()  # Get the game ID without committing
+
+        # Update TrueSkill ratings
+        updated_player1, updated_player2 = trueskill_service.update_player_ratings(
+            player1, player2, game_data.winner_id
+        )
+
+        # Create rating history records
+        rating_history_p1 = RatingHistory(
+            player_id=player1.id,
+            game_id=db_game.id,
+            trueskill_mu_before=player1_mu_before,
+            trueskill_sigma_before=player1_sigma_before,
+            trueskill_mu_after=updated_player1.trueskill_mu,
+            trueskill_sigma_after=updated_player1.trueskill_sigma,
+            rating_system="trueskill",
+        )
+
+        rating_history_p2 = RatingHistory(
+            player_id=player2.id,
+            game_id=db_game.id,
+            trueskill_mu_before=player2_mu_before,
+            trueskill_sigma_before=player2_sigma_before,
+            trueskill_mu_after=updated_player2.trueskill_mu,
+            trueskill_sigma_after=updated_player2.trueskill_sigma,
+            rating_system="trueskill",
+        )
+
+        db.add(rating_history_p1)
+        db.add(rating_history_p2)
         db.commit()
         db.refresh(db_game)
 

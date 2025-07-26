@@ -3,5 +3,6 @@
 
 from .game import Game
 from .player import Player
+from .rating_history import RatingHistory
 
-__all__ = ["Game", "Player"]
+__all__ = ["Game", "Player", "RatingHistory"]
