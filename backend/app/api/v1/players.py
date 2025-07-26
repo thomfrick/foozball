@@ -8,7 +8,9 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
+from app.models.game import Game
 from app.models.player import Player
+from app.schemas.game import GameListResponse
 from app.schemas.player import (
     PlayerCreate,
     PlayerListResponse,
@@ -196,4 +198,60 @@ async def delete_player(player_id: int, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(
             status_code=500, detail=f"Failed to delete player: {str(e)}"
+        )
+
+
+@router.get("/{player_id}/games", response_model=GameListResponse)
+async def get_player_games(
+    player_id: int,
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(20, ge=1, le=100, description="Number of games per page"),
+    db: Session = Depends(get_db),
+):
+    """Get all games for a specific player"""
+    try:
+        # Check if player exists
+        player = db.query(Player).filter(Player.id == player_id).first()
+        if not player:
+            raise HTTPException(status_code=404, detail="Player not found")
+
+        # Build query for games where player participated
+        from sqlalchemy.orm import joinedload
+
+        query = (
+            db.query(Game)
+            .options(
+                joinedload(Game.player1),
+                joinedload(Game.player2),
+                joinedload(Game.winner),
+            )
+            .filter((Game.player1_id == player_id) | (Game.player2_id == player_id))
+        )
+
+        # Order by most recent games first
+        query = query.order_by(Game.created_at.desc())
+
+        # Get total count
+        total = query.count()
+
+        # Apply pagination
+        offset = (page - 1) * page_size
+        games = query.offset(offset).limit(page_size).all()
+
+        # Calculate pagination metadata
+        total_pages = math.ceil(total / page_size)
+
+        return GameListResponse(
+            games=games,
+            total=total,
+            page=page,
+            page_size=page_size,
+            total_pages=total_pages,
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to retrieve player games: {str(e)}"
         )

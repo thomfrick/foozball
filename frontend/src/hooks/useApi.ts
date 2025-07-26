@@ -2,8 +2,10 @@
 // ABOUTME: Provides consistent data fetching and caching patterns
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { gamesApi } from '../api/games'
 import { healthApi } from '../api/health'
 import { playersApi } from '../api/players'
+import type { GameCreate } from '../types/game'
 import type { PlayerCreate, PlayerUpdate } from '../types/player'
 
 // Health check hooks
@@ -79,6 +81,51 @@ export const useDeletePlayer = () => {
     mutationFn: (id: number) => playersApi.deletePlayer(id),
     onSuccess: () => {
       // Invalidate players list to refetch
+      queryClient.invalidateQueries({ queryKey: ['players'] })
+    },
+  })
+}
+
+// Game hooks
+export const useGames = (params?: { page?: number; page_size?: number }) => {
+  return useQuery({
+    queryKey: ['games', params],
+    queryFn: () => gamesApi.getGames(params),
+    staleTime: 1000 * 60, // 1 minute
+  })
+}
+
+export const useGame = (id: number) => {
+  return useQuery({
+    queryKey: ['games', id],
+    queryFn: () => gamesApi.getGame(id),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+}
+
+export const usePlayerGames = (
+  playerId: number | undefined,
+  params?: {
+    page?: number
+    page_size?: number
+  }
+) => {
+  return useQuery({
+    queryKey: ['players', playerId, 'games', params],
+    queryFn: () => gamesApi.getPlayerGames(playerId!, params),
+    staleTime: 1000 * 60 * 2, // 2 minutes
+    enabled: playerId !== undefined, // Only run query when playerId is defined
+  })
+}
+
+export const useCreateGame = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: GameCreate) => gamesApi.createGame(data),
+    onSuccess: () => {
+      // Invalidate games list and player data to refetch with new data
+      queryClient.invalidateQueries({ queryKey: ['games'] })
       queryClient.invalidateQueries({ queryKey: ['players'] })
     },
   })

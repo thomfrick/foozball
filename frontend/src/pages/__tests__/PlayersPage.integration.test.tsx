@@ -1,6 +1,7 @@
 // ABOUTME: Integration tests for PlayersPage with real API interactions
 // ABOUTME: Tests full player management workflow including search, pagination, and CRUD operations
 
+import '../../test/setup-integration'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {

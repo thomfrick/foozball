@@ -3,10 +3,12 @@
 
 from fastapi import APIRouter
 
+from app.api.v1.games import router as games_router
 from app.api.v1.players import router as players_router
 
 # Create the main v1 router
 router = APIRouter(prefix="/api/v1")
 
 # Include all sub-routers
+router.include_router(games_router)
 router.include_router(players_router)
