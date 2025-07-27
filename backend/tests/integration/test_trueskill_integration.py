@@ -16,8 +16,13 @@ class TestTrueSkillIntegration:
     @pytest.fixture
     def sample_players(self, db_session: Session):
         """Create sample players for testing"""
+        # Use unique names to avoid database constraint violations
+        import uuid
+
+        unique_suffix = str(uuid.uuid4())[:8]
+
         player1 = Player(
-            name="Alice",
+            name=f"Alice-{unique_suffix}",
             trueskill_mu=25.0,
             trueskill_sigma=8.3333,
             games_played=0,
@@ -25,7 +30,7 @@ class TestTrueSkillIntegration:
             losses=0,
         )
         player2 = Player(
-            name="Bob",
+            name=f"Bob-{unique_suffix}",
             trueskill_mu=25.0,
             trueskill_sigma=8.3333,
             games_played=0,
@@ -178,8 +183,12 @@ class TestTrueSkillIntegration:
     def test_upset_victory_rating_changes(self, db_session: Session):
         """Test larger rating changes when underdog wins"""
         # Create players with different skill levels
+        import uuid
+
+        unique_suffix = str(uuid.uuid4())[:8]
+
         strong_player = Player(
-            name="Strong Player Upset",
+            name=f"Strong Player Upset-{unique_suffix}",
             trueskill_mu=35.0,
             trueskill_sigma=5.0,
             games_played=20,
@@ -187,7 +196,7 @@ class TestTrueSkillIntegration:
             losses=5,
         )
         weak_player = Player(
-            name="Weak Player Upset",
+            name=f"Weak Player Upset-{unique_suffix}",
             trueskill_mu=15.0,
             trueskill_sigma=5.0,
             games_played=20,
@@ -276,13 +285,25 @@ class TestTrueSkillIntegration:
     def test_match_quality_calculation(self, db_session: Session):
         """Test match quality calculation between different player combinations"""
         # Create players with different skill levels
+        import uuid
+
+        unique_suffix = str(uuid.uuid4())[:8]
+
         beginner = Player(
-            name="Beginner Quality", trueskill_mu=15.0, trueskill_sigma=8.0
+            name=f"Beginner Quality-{unique_suffix}",
+            trueskill_mu=15.0,
+            trueskill_sigma=8.0,
         )
         intermediate = Player(
-            name="Intermediate Quality", trueskill_mu=25.0, trueskill_sigma=5.0
+            name=f"Intermediate Quality-{unique_suffix}",
+            trueskill_mu=25.0,
+            trueskill_sigma=5.0,
         )
-        expert = Player(name="Expert Quality", trueskill_mu=35.0, trueskill_sigma=3.0)
+        expert = Player(
+            name=f"Expert Quality-{unique_suffix}",
+            trueskill_mu=35.0,
+            trueskill_sigma=3.0,
+        )
 
         db_session.add(beginner)
         db_session.add(intermediate)
@@ -301,11 +322,19 @@ class TestTrueSkillIntegration:
     def test_win_probability_prediction(self, db_session: Session):
         """Test win probability predictions"""
         # Create players with different skill levels
+        import uuid
+
+        unique_suffix = str(uuid.uuid4())[:8]
+
         strong_player = Player(
-            name="Strong Player Prob", trueskill_mu=35.0, trueskill_sigma=3.0
+            name=f"Strong Player Prob-{unique_suffix}",
+            trueskill_mu=35.0,
+            trueskill_sigma=3.0,
         )
         weak_player = Player(
-            name="Weak Player Prob", trueskill_mu=15.0, trueskill_sigma=3.0
+            name=f"Weak Player Prob-{unique_suffix}",
+            trueskill_mu=15.0,
+            trueskill_sigma=3.0,
         )
 
         db_session.add(strong_player)
