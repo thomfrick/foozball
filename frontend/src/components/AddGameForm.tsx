@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { useCreateGame, usePlayers } from '../hooks/useApi'
 import type { GameCreate } from '../types/game'
+import { LoadingButton, LoadingSkeleton } from './LoadingSpinner'
 
 interface AddGameFormProps {
   onSuccess?: () => void
@@ -134,14 +135,9 @@ export default function AddGameForm({ onSuccess, onCancel }: AddGameFormProps) {
 
   if (isLoadingPlayers) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-          <div className="space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-            <div className="h-10 bg-gray-200 rounded"></div>
-          </div>
-        </div>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-gray-800">Record Game</h2>
+        <LoadingSkeleton rows={3} />
       </div>
     )
   }
@@ -277,13 +273,13 @@ export default function AddGameForm({ onSuccess, onCancel }: AddGameFormProps) {
 
         {/* Buttons */}
         <div className="flex gap-3 pt-4">
-          <button
+          <LoadingButton
             type="submit"
-            disabled={createGameMutation.isPending}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            isLoading={createGameMutation.isPending}
+            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
-            {createGameMutation.isPending ? 'Recording...' : 'Record Game'}
-          </button>
+            Record Game
+          </LoadingButton>
 
           {onCancel && (
             <button

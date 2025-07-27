@@ -11,9 +11,9 @@ beforeAll(() => {
   server.listen({ onUnhandledRequest: 'warn' })
 })
 
-// Reset handlers and mock data after each test
+// Reset handlers and mock data after each test for proper isolation
 afterEach(() => {
-  server.resetHandlers()
+  server.resetHandlers() // Critical: removes handlers added by server.use() in tests
   resetMockData()
 })
 

@@ -4,6 +4,7 @@
 import React from 'react'
 import { usePlayers } from '../hooks/useApi'
 import type { Player } from '../types/player'
+import { LoadingSkeleton } from './LoadingSpinner'
 
 interface LeaderboardProps {
   limit?: number
@@ -27,11 +28,7 @@ export default function Leaderboard({
     return (
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Leaderboard</h2>
-        <div className="animate-pulse space-y-3">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-16 bg-gray-200 rounded"></div>
-          ))}
-        </div>
+        <LoadingSkeleton rows={Math.min(limit, 5)} />
       </div>
     )
   }

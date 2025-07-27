@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 import { PlayerFixtures } from '../../test/fixtures'
 import { server } from '../../test/mocks/server'
 import RecentGamesList from '../RecentGamesList'
@@ -57,13 +58,42 @@ const renderWithProviders = (component: React.ReactElement) => {
   })
 
   return render(
-    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        {component}
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
 describe('RecentGamesList Integration Tests', () => {
+  const setupMockGamesAPI = (games = mockGames, total?: number) => {
+    server.use(
+      http.get('*/api/v1/games', ({ request }) => {
+        const url = new URL(request.url)
+        const pageSize = parseInt(url.searchParams.get('page_size') || '20', 10)
+        const page = parseInt(url.searchParams.get('page') || '1', 10)
+
+        // Slice the games based on page_size
+        const startIndex = (page - 1) * pageSize
+        const endIndex = startIndex + pageSize
+        const paginatedGames = games.slice(startIndex, endIndex)
+
+        return HttpResponse.json({
+          games: paginatedGames,
+          total: total ?? games.length,
+          page: page,
+          page_size: pageSize,
+          total_pages: Math.ceil((total ?? games.length) / pageSize),
+        })
+      })
+    )
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    // Don't reset handlers - let them persist from the global setup
+    // Individual tests can override with server.use() when needed
   })
 
   it('loads and displays games correctly', async () => {
@@ -72,26 +102,30 @@ describe('RecentGamesList Integration Tests', () => {
     // Should show loading state initially
     expect(document.querySelector('.animate-pulse')).toBeInTheDocument()
 
-    // Wait for games to load
-    await waitFor(() => {
-      expect(screen.getByText('Recent Games')).toBeInTheDocument()
-    })
+    // Wait for games to load and check for actual content
+    await waitFor(
+      () => {
+        // Check if we have actual game content instead of loading
+        const totalGamesText = screen.queryByText(/total games/)
+        expect(totalGamesText).toBeInTheDocument()
+      },
+      { timeout: 5000 }
+    )
 
-    // Should display all games from global mock data
-    expect(screen.getByText('2 total games')).toBeInTheDocument()
+    // Should display all games from mock data
+    expect(screen.getByText(/3 total games/)).toBeInTheDocument()
 
-    // Should show player names from test fixtures
-    // Note: The exact counts depend on the mock games data in the global setup
+    // Should show player names from test fixtures - use getAllByText for multiple occurrences
+    expect(screen.getAllByText('Rookie Player').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Pro Player').length).toBeGreaterThan(0)
 
-    // Should show winner badges
-    expect(screen.getAllByText(/🏆/)).toHaveLength(2)
-
-    // Should show game descriptions using fixture player names
-    // Note: The exact game descriptions depend on the mock games data in the global setup
+    // Should show winner badges (appears once per game)
+    expect(screen.getAllByText(/🏆/)).toHaveLength(3)
 
     // Should show game IDs
     expect(screen.getByText('Game #1')).toBeInTheDocument()
     expect(screen.getByText('Game #2')).toBeInTheDocument()
+    expect(screen.getByText('Game #3')).toBeInTheDocument()
 
     // Loading state should be gone
     expect(document.querySelector('.animate-pulse')).not.toBeInTheDocument()
@@ -260,24 +294,40 @@ describe('RecentGamesList Integration Tests', () => {
   })
 
   it('respects limit prop', async () => {
+    // Set up mock to return only the requested number of games
+    setupMockGamesAPI(mockGames.slice(0, 2), 2)
+
     renderWithProviders(<RecentGamesList limit={2} />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Recent Games')).toBeInTheDocument()
-    })
+    // Wait for games to load and verify no loading state
+    await waitFor(
+      () => {
+        expect(screen.getByText('Recent Games')).toBeInTheDocument()
+        expect(document.querySelector('.animate-pulse')).not.toBeInTheDocument()
+      },
+      { timeout: 5000 }
+    )
 
     // Should only show 2 games
     const gameElements = screen.getAllByText(/Game #/)
     expect(gameElements).toHaveLength(2)
+
+    // Should show correct total
+    expect(screen.getByText('2 total games')).toBeInTheDocument()
   })
 
   it('handles game selection correctly', async () => {
     const mockOnGameSelect = vi.fn()
     renderWithProviders(<RecentGamesList onGameSelect={mockOnGameSelect} />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Recent Games')).toBeInTheDocument()
-    })
+    // Wait for games to load and verify content is loaded
+    await waitFor(
+      () => {
+        expect(screen.getByText('Recent Games')).toBeInTheDocument()
+        expect(document.querySelector('.animate-pulse')).not.toBeInTheDocument()
+      },
+      { timeout: 5000 }
+    )
 
     // Games should be clickable when onGameSelect is provided
     const gameButton = screen.getByLabelText('View details for game 1')
@@ -291,9 +341,14 @@ describe('RecentGamesList Integration Tests', () => {
   it('does not show clickable interface when onGameSelect is not provided', async () => {
     renderWithProviders(<RecentGamesList />)
 
-    await waitFor(() => {
-      expect(screen.getByText('Recent Games')).toBeInTheDocument()
-    })
+    // Wait for games to load and verify content is loaded
+    await waitFor(
+      () => {
+        expect(screen.getByText('Recent Games')).toBeInTheDocument()
+        expect(document.querySelector('.animate-pulse')).not.toBeInTheDocument()
+      },
+      { timeout: 5000 }
+    )
 
     // Games should not be clickable
     expect(
@@ -305,7 +360,7 @@ describe('RecentGamesList Integration Tests', () => {
     // Mock slow API response
     server.use(
       http.get('*/api/v1/games', async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000)) // 1 second delay
+        await new Promise((resolve) => setTimeout(resolve, 500)) // 500ms delay
         return HttpResponse.json({
           games: mockGames,
           total: mockGames.length,
@@ -318,14 +373,14 @@ describe('RecentGamesList Integration Tests', () => {
 
     renderWithProviders(<RecentGamesList />)
 
-    // Should show loading state
+    // Should show loading state with title
     expect(document.querySelector('.animate-pulse')).toBeInTheDocument()
-    expect(screen.queryByText('Recent Games')).not.toBeInTheDocument()
+    expect(screen.getByText('Recent Games')).toBeInTheDocument() // Title is shown even during loading
 
-    // Wait for loading to complete
+    // Wait for actual content to load
     await waitFor(
       () => {
-        expect(screen.getByText('Recent Games')).toBeInTheDocument()
+        expect(screen.getByText(/total games/)).toBeInTheDocument()
       },
       { timeout: 2000 }
     )
@@ -387,7 +442,7 @@ describe('RecentGamesList Integration Tests', () => {
     renderWithProviders(<RecentGamesList />)
 
     await waitFor(() => {
-      expect(screen.getByText('Recent Games')).toBeInTheDocument()
+      expect(screen.getByText(/total games/)).toBeInTheDocument()
     })
 
     // Check that winners are highlighted with trophy emoji
@@ -443,7 +498,7 @@ describe('RecentGamesList Integration Tests', () => {
     renderWithProviders(<RecentGamesList />)
 
     await waitFor(() => {
-      expect(screen.getByText('Recent Games')).toBeInTheDocument()
+      expect(screen.getByText(/total games/)).toBeInTheDocument()
     })
 
     // Should handle long names gracefully

@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 import { PlayerFixtures } from '../../test/fixtures'
 import { server } from '../../test/mocks/server'
 import AddGameForm from '../AddGameForm'
@@ -24,7 +25,11 @@ const renderWithProviders = (component: React.ReactElement) => {
   })
 
   return render(
-    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        {component}
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
@@ -331,18 +336,18 @@ describe('AddGameForm Integration Tests', () => {
     fireEvent.click(submitButton)
     fireEvent.click(submitButton)
 
-    // Button should show loading state
+    // Button should be disabled during loading
     await waitFor(() => {
-      expect(screen.getByText('Recording...')).toBeInTheDocument()
+      expect(submitButton).toBeDisabled()
     })
 
-    // Button should be disabled
-    expect(submitButton).toBeDisabled()
+    // Button should have loading state (opacity changes)
+    expect(submitButton).toHaveClass('opacity-75', 'cursor-not-allowed')
 
-    // Wait for completion
+    // Wait for completion (button no longer loading)
     await waitFor(
       () => {
-        expect(screen.getByText('Record Game')).toBeInTheDocument()
+        expect(submitButton).not.toBeDisabled()
       },
       { timeout: 1000 }
     )
@@ -449,7 +454,7 @@ describe('AddGameForm Integration Tests', () => {
       expect(screen.getByText('Please select the winner')).toBeInTheDocument()
     })
 
-    // Form should not be submitted
-    expect(screen.queryByText('Recording...')).not.toBeInTheDocument()
+    // Form should not be submitted (button not in loading state)
+    expect(submitButton).not.toBeDisabled()
   })
 })

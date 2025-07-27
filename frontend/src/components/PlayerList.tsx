@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { usePlayers } from '../hooks/useApi'
 import { useDebounce } from '../hooks/useDebounce'
 import type { Player } from '../types/player'
+import { LoadingSkeleton } from './LoadingSpinner'
 import { CompactTrueSkillRating } from './TrueSkillRating'
 
 interface PlayerListProps {
@@ -55,24 +56,25 @@ export default function PlayerList({
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="animate-pulse">
-          <div className="h-6 bg-gray-200 rounded mb-4 w-1/4"></div>
-          <div className="space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded"></div>
-            ))}
-          </div>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          Players
+        </h2>
+        <div className="mb-4">
+          <div className="w-full h-10 bg-gray-200 dark:bg-gray-600 rounded-md animate-pulse"></div>
         </div>
+        <LoadingSkeleton rows={pageSize} />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Players</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            Players
+          </h2>
           <div className="p-4 bg-red-50 border border-red-200 rounded-md">
             <p className="text-red-600 mb-2">Failed to load players</p>
             <button
@@ -91,10 +93,12 @@ export default function PlayerList({
   const totalPages = playersData?.total_pages || 1
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Players</h2>
-        <span className="text-sm text-gray-500">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Players
+        </h2>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           {playersData?.total || 0} total players
         </span>
       </div>
@@ -106,14 +110,14 @@ export default function PlayerList({
           value={search}
           onChange={handleSearchChange}
           placeholder="Search players..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
         />
       </div>
 
       {/* Players list */}
       {players.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-gray-400">
             {search
               ? 'No players found matching your search.'
               : 'No players yet.'}
@@ -124,7 +128,7 @@ export default function PlayerList({
           {players.map((player) => (
             <div
               key={player.id}
-              className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
             >
               {onPlayerSelect ? (
                 <button
@@ -135,16 +139,18 @@ export default function PlayerList({
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-gray-900 dark:text-white">
                         {player.name}
                       </h3>
                       {player.email && (
-                        <p className="text-sm text-gray-600">{player.email}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          {player.email}
+                        </p>
                       )}
                     </div>
                     <div className="text-right">
                       <CompactTrueSkillRating player={player} />
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {player.games_played} games •{' '}
                         {player.win_percentage.toFixed(1)}% wins
                       </p>
@@ -155,16 +161,18 @@ export default function PlayerList({
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-gray-900 dark:text-white">
                         {player.name}
                       </h3>
                       {player.email && (
-                        <p className="text-sm text-gray-600">{player.email}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                          {player.email}
+                        </p>
                       )}
                     </div>
                     <div className="text-right">
                       <CompactTrueSkillRating player={player} />
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {player.games_played} games •{' '}
                         {player.win_percentage.toFixed(1)}% wins
                       </p>
@@ -211,19 +219,19 @@ export default function PlayerList({
           <button
             onClick={() => handlePageChange(page - 1)}
             disabled={page <= 1}
-            className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             Previous
           </button>
 
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600 dark:text-gray-300">
             Page {page} of {totalPages}
           </span>
 
           <button
             onClick={() => handlePageChange(page + 1)}
             disabled={page >= totalPages}
-            className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             Next
           </button>

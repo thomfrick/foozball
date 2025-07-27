@@ -4,6 +4,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 import AddPlayerForm from '../AddPlayerForm'
 
 // Mock the API hooks
@@ -24,7 +25,11 @@ const renderWithProviders = (component: React.ReactElement) => {
   })
 
   return render(
-    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        {component}
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
@@ -48,11 +53,17 @@ describe('AddPlayerForm', () => {
     renderWithProviders(<AddPlayerForm />)
 
     const submitButton = screen.getByRole('button', { name: /create player/i })
-    fireEvent.click(submitButton)
+    const form = submitButton.closest('form')
 
-    await waitFor(() => {
-      expect(screen.getByText('Name is required')).toBeInTheDocument()
-    })
+    // Submit the form to trigger validation
+    fireEvent.submit(form!)
+
+    await waitFor(
+      () => {
+        expect(screen.getByText('Name is required')).toBeInTheDocument()
+      },
+      { timeout: 2000 }
+    )
   })
 
   it('shows validation error for short name', async () => {
@@ -97,9 +108,10 @@ describe('AddPlayerForm', () => {
 
     const nameInput = screen.getByLabelText(/name/i)
     const submitButton = screen.getByRole('button', { name: /create player/i })
+    const form = submitButton.closest('form')
 
     // Trigger validation error
-    fireEvent.click(submitButton)
+    fireEvent.submit(form!)
     await waitFor(() => {
       expect(screen.getByText('Name is required')).toBeInTheDocument()
     })

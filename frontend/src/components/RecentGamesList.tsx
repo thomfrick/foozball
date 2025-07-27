@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { useGames } from '../hooks/useApi'
 import type { Game } from '../types/game'
+import { LoadingSkeleton } from './LoadingSpinner'
 
 interface RecentGamesListProps {
   onGameSelect?: (game: Game) => void
@@ -61,14 +62,8 @@ export default function RecentGamesList({
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="animate-pulse">
-          <div className="h-6 bg-gray-200 rounded mb-4 w-1/3"></div>
-          <div className="space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Games</h2>
+        <LoadingSkeleton rows={Math.min(pageSize, 5)} />
       </div>
     )
   }
@@ -98,10 +93,12 @@ export default function RecentGamesList({
   const totalPages = gamesData?.total_pages || 1
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Recent Games</h2>
-        <span className="text-sm text-gray-500">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Recent Games
+        </h2>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
           {gamesData?.total || 0} total games
         </span>
       </div>
@@ -109,15 +106,19 @@ export default function RecentGamesList({
       {/* Games list */}
       {games.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500">No games recorded yet.</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            No games recorded yet.
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
           {games.map((game) => (
             <div
               key={game.id}
-              className={`p-4 border border-gray-200 rounded-lg transition-colors ${
-                onGameSelect ? 'hover:bg-gray-50 cursor-pointer' : ''
+              className={`p-4 border border-gray-200 dark:border-gray-600 rounded-lg transition-colors ${
+                onGameSelect
+                  ? 'hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer'
+                  : ''
               }`}
             >
               {onGameSelect ? (
@@ -151,7 +152,7 @@ export default function RecentGamesList({
           <button
             onClick={() => handlePageChange(page - 1)}
             disabled={page === 1}
-            className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             Previous
           </button>
@@ -163,10 +164,10 @@ export default function RecentGamesList({
                 <button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-1 text-sm rounded-md ${
+                  className={`px-3 py-1 text-sm rounded-md transition-colors duration-200 ${
                     page === pageNum
                       ? 'bg-blue-600 text-white'
-                      : 'border border-gray-300 hover:bg-gray-50'
+                      : 'border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600'
                   }`}
                 >
                   {pageNum}
@@ -178,7 +179,7 @@ export default function RecentGamesList({
           <button
             onClick={() => handlePageChange(page + 1)}
             disabled={page === totalPages}
-            className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             Next
           </button>
@@ -207,18 +208,18 @@ function GameContent({
             <span
               className={`font-medium ${
                 game.winner_id === game.player1_id
-                  ? 'text-green-700'
-                  : 'text-gray-700'
+                  ? 'text-green-700 dark:text-green-400'
+                  : 'text-gray-700 dark:text-gray-300'
               }`}
             >
               {game.player1.name}
             </span>
-            <span className="text-gray-400">vs</span>
+            <span className="text-gray-400 dark:text-gray-500">vs</span>
             <span
               className={`font-medium ${
                 game.winner_id === game.player2_id
-                  ? 'text-green-700'
-                  : 'text-gray-700'
+                  ? 'text-green-700 dark:text-green-400'
+                  : 'text-gray-700 dark:text-gray-300'
               }`}
             >
               {game.player2.name}
@@ -227,18 +228,24 @@ function GameContent({
 
           {/* Winner badge */}
           <div className="flex items-center">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400">
               🏆 {game.winner.name}
             </span>
           </div>
         </div>
 
-        <p className="text-sm text-gray-600 mt-1">{getGameDescription(game)}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+          {getGameDescription(game)}
+        </p>
       </div>
 
       <div className="text-right ml-4">
-        <p className="text-sm text-gray-500">{formatDate(game.created_at)}</p>
-        <p className="text-xs text-gray-400">Game #{game.id}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {formatDate(game.created_at)}
+        </p>
+        <p className="text-xs text-gray-400 dark:text-gray-500">
+          Game #{game.id}
+        </p>
       </div>
     </div>
   )

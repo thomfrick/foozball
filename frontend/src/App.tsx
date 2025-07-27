@@ -2,6 +2,8 @@
 // ABOUTME: Root component that sets up the application routing
 
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import ErrorBoundary from './components/ErrorBoundary'
+import Layout from './components/Layout'
 import AboutPage from './pages/AboutPage'
 import HomePage from './pages/HomePage'
 import LeaderboardPage from './pages/LeaderboardPage'
@@ -10,15 +12,19 @@ import PlayersPage from './pages/PlayersPage'
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/players" element={<PlayersPage />} />
-        <Route path="/leaderboard" element={<LeaderboardPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/players" element={<PlayersPage />} />
+            <Route path="/leaderboard" element={<LeaderboardPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </ErrorBoundary>
   )
 }
 

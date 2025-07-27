@@ -4,6 +4,7 @@
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 import HomePage from '../HomePage'
 
 // Test wrapper with required providers
@@ -16,9 +17,11 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
   })
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>{children}</BrowserRouter>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>{children}</BrowserRouter>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
@@ -30,7 +33,7 @@ describe('HomePage', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByText('🏓 Foosball ELO Tracker')).toBeInTheDocument()
+    expect(screen.getByText('Welcome to Foosball Tracker')).toBeInTheDocument()
   })
 
   it('renders navigation links', () => {
@@ -41,9 +44,11 @@ describe('HomePage', () => {
     )
 
     expect(
-      screen.getByRole('link', { name: /view players/i })
+      screen.getByRole('link', { name: /view leaderboard/i })
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /about/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /manage players/i })
+    ).toBeInTheDocument()
   })
 
   it('shows the success message', () => {

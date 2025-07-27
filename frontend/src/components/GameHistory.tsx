@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react'
 import { useGames, usePlayerGames, usePlayers } from '../hooks/useApi'
 import type { Game } from '../types/game'
+import { LoadingSkeleton } from './LoadingSpinner'
 
 interface GameHistoryProps {
   playerId?: number // If provided, shows games for specific player
@@ -90,15 +91,13 @@ export default function GameHistory({
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="animate-pulse">
-          <div className="h-6 bg-gray-200 rounded mb-4 w-1/3"></div>
-          <div className="h-10 bg-gray-200 rounded mb-4"></div>
-          <div className="space-y-3">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="h-20 bg-gray-200 rounded"></div>
-            ))}
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Game History</h2>
+        {!playerId && (
+          <div className="mb-6">
+            <div className="h-10 bg-gray-200 rounded-md animate-pulse"></div>
           </div>
-        </div>
+        )}
+        <LoadingSkeleton rows={Math.min(pageSize, 8)} />
       </div>
     )
   }

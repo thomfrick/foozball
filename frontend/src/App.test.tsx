@@ -4,8 +4,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import App from './App'
+import ErrorBoundary from './components/ErrorBoundary'
+import { ThemeProvider } from './contexts/ThemeContext'
 
-// Test wrapper with QueryClient
+// Test wrapper with all providers
 function TestWrapper({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -15,7 +17,11 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
   })
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
@@ -27,6 +33,6 @@ describe('App', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByText('🏓 Foosball ELO Tracker')).toBeInTheDocument()
+    expect(screen.getByText('Foosball Tracker')).toBeInTheDocument()
   })
 })

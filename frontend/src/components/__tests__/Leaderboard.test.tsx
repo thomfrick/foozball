@@ -4,6 +4,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 import { usePlayers } from '../../hooks/useApi'
 import type { PlayerListResponse } from '../../types/player'
 import Leaderboard from '../Leaderboard'
@@ -27,7 +28,11 @@ const createQueryClient = () =>
 const renderWithQueryClient = (component: React.ReactElement) => {
   const queryClient = createQueryClient()
   return render(
-    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        {component}
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 

@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { useCreatePlayer } from '../hooks/useApi'
 import type { PlayerCreate } from '../types/player'
+import { LoadingButton } from './LoadingSpinner'
 
 interface AddPlayerFormProps {
   onSuccess?: () => void
@@ -94,15 +95,17 @@ export default function AddPlayerForm({
     }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Add New Player</h2>
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        Add New Player
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name field */}
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >
             Name *
           </label>
@@ -111,17 +114,26 @@ export default function AddPlayerForm({
             id="name"
             value={formData.name}
             onChange={handleInputChange('name')}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full px-3 py-2 border rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
               errors.name
                 ? 'border-red-300 focus:border-red-500'
-                : 'border-gray-300 focus:border-blue-500'
+                : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
             }`}
             placeholder="Enter player name"
             disabled={createPlayerMutation.isPending}
             autoComplete="name"
+            aria-describedby={errors.name ? 'name-error' : undefined}
+            aria-invalid={!!errors.name}
+            required
           />
           {errors.name && (
-            <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+            <p
+              id="name-error"
+              className="mt-1 text-sm text-red-600"
+              role="alert"
+            >
+              {errors.name}
+            </p>
           )}
         </div>
 
@@ -129,7 +141,7 @@ export default function AddPlayerForm({
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >
             Email (optional)
           </label>
@@ -138,36 +150,49 @@ export default function AddPlayerForm({
             id="email"
             value={formData.email}
             onChange={handleInputChange('email')}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            className={`w-full px-3 py-2 border rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
               errors.email
                 ? 'border-red-300 focus:border-red-500'
-                : 'border-gray-300 focus:border-blue-500'
+                : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
             }`}
             placeholder="Enter email address"
             disabled={createPlayerMutation.isPending}
             autoComplete="email"
+            aria-describedby={errors.email ? 'email-error' : undefined}
+            aria-invalid={!!errors.email}
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+            <p
+              id="email-error"
+              className="mt-1 text-sm text-red-600"
+              role="alert"
+            >
+              {errors.email}
+            </p>
           )}
         </div>
 
         {/* Submit error */}
         {errors.submit && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm text-red-600">{errors.submit}</p>
+          <div
+            className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md"
+            role="alert"
+          >
+            <p className="text-sm text-red-600 dark:text-red-400">
+              {errors.submit}
+            </p>
           </div>
         )}
 
         {/* Buttons */}
         <div className="flex gap-3 pt-4">
-          <button
+          <LoadingButton
             type="submit"
-            disabled={createPlayerMutation.isPending}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            isLoading={createPlayerMutation.isPending}
+            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
-            {createPlayerMutation.isPending ? 'Creating...' : 'Create Player'}
-          </button>
+            Create Player
+          </LoadingButton>
 
           {onCancel && (
             <button

@@ -6,17 +6,15 @@ import Leaderboard from '../components/Leaderboard'
 
 export default function LeaderboardPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
           <p className="mt-2 text-gray-600">
             Player rankings based on TrueSkill rating system
           </p>
         </div>
-      </div>
 
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main leaderboard */}
           <div className="lg:col-span-2">
@@ -114,7 +112,7 @@ export default function LeaderboardPage() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   )
 }

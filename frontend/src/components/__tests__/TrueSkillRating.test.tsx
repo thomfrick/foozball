@@ -3,11 +3,16 @@
 
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 import type { Player } from '../../types/player'
 import TrueSkillRating, {
   CompactTrueSkillRating,
   TrueSkillChange,
 } from '../TrueSkillRating'
+
+const renderWithProviders = (component: React.ReactElement) => {
+  return render(<ThemeProvider>{component}</ThemeProvider>)
+}
 
 const mockPlayer: Player = {
   id: 1,
@@ -37,14 +42,14 @@ const experiencedPlayer: Player = {
 
 describe('TrueSkillRating', () => {
   it('displays conservative rating correctly', () => {
-    render(<TrueSkillRating player={mockPlayer} />)
+    renderWithProviders(<TrueSkillRating player={mockPlayer} />)
 
     // Conservative rating = mu - 3*sigma = 25.0 - 3*8.3333 = 0.0
     expect(screen.getByText('0.0')).toBeInTheDocument()
   })
 
   it('displays mu and sigma values', () => {
-    render(<TrueSkillRating player={mockPlayer} />)
+    renderWithProviders(<TrueSkillRating player={mockPlayer} />)
 
     expect(screen.getByText('μ')).toBeInTheDocument()
     expect(screen.getByText('25.0')).toBeInTheDocument()
@@ -53,21 +58,23 @@ describe('TrueSkillRating', () => {
   })
 
   it('shows low certainty for new players (high sigma)', () => {
-    render(<TrueSkillRating player={mockPlayer} />)
+    renderWithProviders(<TrueSkillRating player={mockPlayer} />)
 
     expect(screen.getByText('Low certainty')).toBeInTheDocument()
     expect(screen.getByText('New Player')).toBeInTheDocument()
   })
 
   it('shows high certainty for experienced players (low sigma)', () => {
-    render(<TrueSkillRating player={experiencedPlayer} />)
+    renderWithProviders(<TrueSkillRating player={experiencedPlayer} />)
 
     expect(screen.getByText('High certainty')).toBeInTheDocument()
     expect(screen.queryByText('New Player')).not.toBeInTheDocument()
   })
 
   it('can hide conservative rating when requested', () => {
-    render(<TrueSkillRating player={mockPlayer} showConservative={false} />)
+    renderWithProviders(
+      <TrueSkillRating player={mockPlayer} showConservative={false} />
+    )
 
     expect(screen.queryByText('0.0')).not.toBeInTheDocument()
     expect(screen.getByText('μ')).toBeInTheDocument()
@@ -77,7 +84,7 @@ describe('TrueSkillRating', () => {
 
 describe('CompactTrueSkillRating', () => {
   it('displays compact rating format', () => {
-    render(<CompactTrueSkillRating player={experiencedPlayer} />)
+    renderWithProviders(<CompactTrueSkillRating player={experiencedPlayer} />)
 
     // Conservative rating = 28.5 - 3*4.2 = 15.9
     expect(screen.getByText('15.9')).toBeInTheDocument()
@@ -87,7 +94,7 @@ describe('CompactTrueSkillRating', () => {
 
 describe('TrueSkillChange', () => {
   it('displays rating improvement correctly', () => {
-    render(
+    renderWithProviders(
       <TrueSkillChange
         beforeMu={25.0}
         beforeSigma={8.3}
@@ -106,7 +113,7 @@ describe('TrueSkillChange', () => {
   })
 
   it('displays rating decline correctly', () => {
-    render(
+    renderWithProviders(
       <TrueSkillChange
         beforeMu={25.0}
         beforeSigma={7.0}
@@ -131,13 +138,23 @@ describe('TrueSkill certainty levels', () => {
     const mediumSigma = { ...mockPlayer, trueskill_sigma: 6.0 } // Medium uncertainty = Medium certainty
     const lowSigma = { ...mockPlayer, trueskill_sigma: 4.0 } // Low uncertainty = High certainty
 
-    const { rerender } = render(<TrueSkillRating player={highSigma} />)
+    const { rerender } = renderWithProviders(
+      <TrueSkillRating player={highSigma} />
+    )
     expect(screen.getByText('Low certainty')).toBeInTheDocument()
 
-    rerender(<TrueSkillRating player={mediumSigma} />)
+    rerender(
+      <ThemeProvider>
+        <TrueSkillRating player={mediumSigma} />
+      </ThemeProvider>
+    )
     expect(screen.getByText('Medium certainty')).toBeInTheDocument()
 
-    rerender(<TrueSkillRating player={lowSigma} />)
+    rerender(
+      <ThemeProvider>
+        <TrueSkillRating player={lowSigma} />
+      </ThemeProvider>
+    )
     expect(screen.getByText('High certainty')).toBeInTheDocument()
   })
 })

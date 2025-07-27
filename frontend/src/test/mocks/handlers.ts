@@ -12,14 +12,14 @@ const mockPlayers: Player[] = PlayerFixtures.createDiversePlayersData()
 let playersData = [...mockPlayers]
 let nextPlayerId = mockPlayers.length + 1
 
-// Mock games data
+// Mock games data - match the test data
 const mockGames: Game[] = [
   {
     id: 1,
     player1_id: 1,
     player2_id: 2,
     winner_id: 1,
-    created_at: '2023-01-03T14:30:00Z',
+    created_at: '2023-01-03T14:30:00Z', // Most recent
     player1: mockPlayers[0],
     player2: mockPlayers[1],
     winner: mockPlayers[0],
@@ -29,10 +29,20 @@ const mockGames: Game[] = [
     player1_id: 2,
     player2_id: 1,
     winner_id: 2,
-    created_at: '2023-01-03T12:00:00Z',
+    created_at: '2023-01-03T12:00:00Z', // Middle
     player1: mockPlayers[1],
     player2: mockPlayers[0],
     winner: mockPlayers[1],
+  },
+  {
+    id: 3,
+    player1_id: 1,
+    player2_id: 2,
+    winner_id: 1,
+    created_at: '2023-01-03T09:15:00Z', // Oldest
+    player1: mockPlayers[0],
+    player2: mockPlayers[1],
+    winner: mockPlayers[0],
   },
 ]
 
@@ -40,7 +50,7 @@ let gamesData = [...mockGames]
 let nextGameId = mockGames.length + 1
 
 export const handlers = [
-  // GET /api/v1/players (with and without trailing slash)
+  // GET /api/v1/players
   http.get('*/api/v1/players', ({ request }) => {
     const url = new URL(request.url)
     const search = url.searchParams.get('search')
@@ -73,7 +83,7 @@ export const handlers = [
     })
   }),
 
-  // POST /api/v1/players (with and without trailing slash)
+  // POST /api/v1/players
   http.post('*/api/v1/players', async ({ request }) => {
     const body = (await request.json()) as { name: string; email?: string }
 
@@ -168,11 +178,18 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 })
   }),
 
-  // GET /api/v1/games (with and without trailing slash)
+  // GET /api/v1/games
   http.get('*/api/v1/games', ({ request }) => {
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '1')
     const pageSize = parseInt(url.searchParams.get('page_size') || '10')
+
+    // Debug logging for tests
+    if (import.meta.env.MODE === 'test') {
+      console.log(
+        `MSW: Intercepted GET /api/v1/games - page=${page}, page_size=${pageSize}, total_games=${gamesData.length}`
+      )
+    }
 
     const total = gamesData.length
     const totalPages = Math.ceil(total / pageSize)

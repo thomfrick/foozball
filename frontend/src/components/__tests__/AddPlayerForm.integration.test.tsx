@@ -4,6 +4,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 import AddPlayerForm from '../AddPlayerForm'
 import '../../test/setup-integration'
 
@@ -16,7 +17,11 @@ const renderWithProviders = (component: React.ReactElement) => {
   })
 
   return render(
-    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        {component}
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
@@ -100,9 +105,9 @@ describe('AddPlayerForm Integration Tests', () => {
     fireEvent.change(nameInput, { target: { value: 'Loading Test Player' } })
     fireEvent.click(submitButton)
 
-    // Check for loading state (button should be disabled)
+    // Check for loading state (button should be disabled with loading styling)
     expect(submitButton).toBeDisabled()
-    expect(screen.getByText(/creating.../i)).toBeInTheDocument()
+    expect(submitButton).toHaveClass('opacity-75', 'cursor-not-allowed')
 
     // Wait for submission to complete
     await waitFor(() => {

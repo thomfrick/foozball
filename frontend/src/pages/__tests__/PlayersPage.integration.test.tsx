@@ -12,6 +12,7 @@ import {
   within,
 } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 import PlayersPage from '../PlayersPage'
 import '../../test/setup-integration'
 
@@ -24,9 +25,11 @@ const renderWithProviders = (component: React.ReactElement) => {
   })
 
   return render(
-    <QueryClientProvider client={queryClient}>
-      <MemoryRouter>{component}</MemoryRouter>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>{component}</MemoryRouter>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
