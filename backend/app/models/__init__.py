@@ -4,5 +4,7 @@
 from .game import Game
 from .player import Player
 from .rating_history import RatingHistory
+from .team import Team
+from .teamgame import TeamGame
 
-__all__ = ["Game", "Player", "RatingHistory"]
+__all__ = ["Game", "Player", "RatingHistory", "Team", "TeamGame"]

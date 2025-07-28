@@ -3,6 +3,15 @@
 
 from .game import GameCreate, GameListResponse, GameResponse
 from .player import PlayerCreate, PlayerListResponse, PlayerResponse, PlayerUpdate
+from .team import (
+    TeamCreate,
+    TeamFormationRequest,
+    TeamGameCreate,
+    TeamGameListResponse,
+    TeamGameResponse,
+    TeamListResponse,
+    TeamResponse,
+)
 
 __all__ = [
     "GameCreate",
@@ -12,4 +21,11 @@ __all__ = [
     "PlayerListResponse",
     "PlayerResponse",
     "PlayerUpdate",
+    "TeamCreate",
+    "TeamFormationRequest",
+    "TeamGameCreate",
+    "TeamGameListResponse",
+    "TeamGameResponse",
+    "TeamListResponse",
+    "TeamResponse",
 ]
