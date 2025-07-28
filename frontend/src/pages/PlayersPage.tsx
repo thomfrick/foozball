@@ -1,11 +1,12 @@
-// ABOUTME: Main players page that orchestrates all player management functionality
-// ABOUTME: Combines list, add, detail, and delete components with state management
+// ABOUTME: Modern players page with professional design and state management
+// ABOUTME: Features beautiful cards, buttons, and responsive layout
 
 import { useState } from 'react'
 import AddPlayerForm from '../components/AddPlayerForm'
 import DeletePlayerConfirm from '../components/DeletePlayerConfirm'
 import PlayerDetail from '../components/PlayerDetail'
 import PlayerList from '../components/PlayerList'
+import { OutlineButton, PrimaryButton } from '../components/ui/Button'
 import type { Player } from '../types/player'
 
 type ViewMode = 'list' | 'add' | 'detail'
@@ -63,30 +64,52 @@ export default function PlayersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4">
+    <div className="py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Player Management
-          </h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div className="text-center sm:text-left">
+            <div className="text-5xl mb-3">👥</div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 dark:text-dark-text bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+              Player Management
+            </h1>
+            <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+              Manage your foosball players and track their progress
+            </p>
+          </div>
 
           {viewMode === 'list' && (
-            <button
+            <PrimaryButton
               onClick={handleAddPlayer}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              leftIcon={<span>➕</span>}
+              size="lg"
             >
               Add New Player
-            </button>
+            </PrimaryButton>
           )}
 
           {viewMode !== 'list' && (
-            <button
+            <OutlineButton
               onClick={handleBackToList}
-              className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              leftIcon={
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              }
+              size="lg"
             >
               Back to List
-            </button>
+            </OutlineButton>
           )}
         </div>
 

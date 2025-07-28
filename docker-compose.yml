@@ -1,5 +1,11 @@
 
+# Foosball TrueSkill Tracker - Docker Compose Configuration
+# Development setup: docker-compose up -d
+# Database only: docker-compose up db -d
+# Full stack: docker-compose up --build
+
 services:
+  # PostgreSQL Database
   db:
     image: postgres:15-alpine
     container_name: foosball_postgres
@@ -19,7 +25,7 @@ services:
       retries: 5
       start_period: 30s
 
-  # Backend service (for full stack deployment)
+  # Backend API Server
   backend:
     build:
       context: ./backend
@@ -39,16 +45,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    profiles:
-      - full-stack
     command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
-  # Frontend service for development
-  frontend-dev:
+  # Frontend Development Server
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: foosball_frontend_dev
+    container_name: foosball_frontend
     environment:
       - VITE_API_URL=http://localhost:8000
     ports:
@@ -56,22 +60,6 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    profiles:
-      - full-stack
-      - dev
-    depends_on:
-      - backend
-
-  # Frontend service for production
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: foosball_frontend
-    ports:
-      - "80:80"
-    profiles:
-      - production
     depends_on:
       - backend
 

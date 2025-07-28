@@ -6,21 +6,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Quick Start (Full Stack)
 
-#### Option 1: Docker Development (Recommended)
+#### Option 1: Docker Development (Recommended for simplicity)
 ```bash
 # Start full stack with Docker (database + backend + frontend)
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker-compose up --build
 
 # Check services are running
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml ps
+docker-compose ps
 
 # Follow logs
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
 ```
 
-#### Option 2: Local Development
+#### Option 2: Local Development (Recommended for active development)
 ```bash
-# Start database
+# Start database only
 docker-compose up db -d && sleep 30
 
 # Start backend API server
@@ -30,11 +33,10 @@ uv run --project backend uvicorn app.main:app --reload
 npm run dev --prefix frontend
 ```
 
-#### Option 3: Database + Frontend Only (for API development)
+#### Option 3: Database Only (for local backend/frontend development)
 ```bash
-# Start database and frontend in Docker
+# Start just the database
 docker-compose up db -d
-docker-compose --profile dev up frontend-dev
 ```
 
 ### Backend Commands
@@ -56,13 +58,13 @@ docker-compose --profile dev up frontend-dev
 - **Full stack tests**:
   ```bash
   # Start services
-  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+  docker-compose up -d
 
   # Run backend tests
   docker exec foosball_backend uv run pytest -v --tb=short
 
   # Run frontend tests
-  docker exec foosball_frontend_dev npm test run
+  docker exec foosball_frontend npm run test:run
   ```
 
 #### Backend Testing (Local)
@@ -150,12 +152,16 @@ frontend/
 - **✅ Phase 1.2.F Complete**: Game Recording Frontend (Complete UI)
 - **✅ Phase 1.2.T Complete**: Comprehensive Testing Suite (unit, integration, E2E)
 - **✅ Phase 1.3 Complete**: Basic TrueSkill Rating System (Full Implementation)
+- **✅ Phase 1.4 Complete**: Advanced UI/UX Implementation (Theme system, Error boundaries, Enhanced components)
+- **✅ Phase 1.5 Complete**: Modern UI Design System (Professional component library with comprehensive testing)
 - **Database**: Players, Games, and RatingHistory tables with complete TrueSkill implementation
 - **API Endpoints**: `/players`, `/games` CRUD, `/health`, `/ready`, `/docs` with TrueSkill integration
-- **Frontend**: Complete player management, game recording, and TrueSkill leaderboard UI
+- **Frontend**: Complete player management, game recording, games page, and TrueSkill leaderboard UI
+- **UI Design System**: Professional Button and Card components with variants, theme system, error boundaries
 - **TrueSkill Features**: Automatic rating updates, leaderboard, uncertainty indicators, tooltips
-- **Test Coverage**: Backend 119+ tests (90%+), Frontend 155+ tests passing
+- **Test Coverage**: Backend 119+ tests (90%+), Frontend 393+ tests passing
 - **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
+- **Code Quality**: Full ESLint/Prettier frontend, Ruff backend linting and formatting
 
 ### Key Patterns
 - **Database**: Uses SQLAlchemy with async-compatible Session dependency injection
@@ -165,20 +171,23 @@ frontend/
 - **Pagination**: Built-in pagination for list endpoints with metadata
 - **Health Checks**: Separate `/health` (basic) and `/ready` (database check) endpoints
 
-### Frontend Features (Phases 1.1.F → 1.3.F)
+### Frontend Features (Phases 1.1.F → 1.5.F)
 - **Player Management**: Complete CRUD interface with forms, validation, and error handling
-- **Game Recording**: Full game entry with player selection and winner validation
+- **Game Recording**: Full game entry with player selection, winner validation, and dedicated games page
 - **TrueSkill Leaderboard**: Professional ranking system with conservative ratings (μ - 3σ)
 - **Rating Displays**: Beautiful TrueSkill visualization in player lists and profiles
 - **Uncertainty Indicators**: Visual High/Medium/Low certainty levels based on sigma
 - **Educational Tooltips**: Comprehensive explanations of TrueSkill algorithm
-- **Navigation**: Routing for /players, /leaderboard, /about with clean URLs
+- **UI Design System**: Professional Button and Card components with variants (primary, secondary, success, danger, outline, ghost)
+- **Theme Management**: Dark/light mode toggle with system preference detection and localStorage persistence
+- **Enhanced Error Boundaries**: Comprehensive error handling with user-friendly recovery mechanisms
+- **Navigation**: Routing for /players, /leaderboard, /games, /about with clean URLs
 - **Search & Filtering**: Debounced search with pagination (300ms delay to reduce API calls)
 - **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
 - **Modal Dialogs**: Focus management, escape key handling, and click-outside closing
 - **Loading States**: Skeleton loading, error boundaries, and retry mechanisms
 - **Form Validation**: Real-time validation with user-friendly error messages
-- **Responsive Design**: Mobile-first design with Tailwind CSS
+- **Responsive Design**: Mobile-first design with Tailwind CSS and comprehensive mobile testing
 - **State Management**: TanStack Query for server state with optimized caching
 
 ### Environment Variables

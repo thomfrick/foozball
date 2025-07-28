@@ -134,7 +134,7 @@ describe('PlayersPage Integration Tests', () => {
     // Find Pro Player's row and click edit button
     const proContainer = screen
       .getByText('Pro Player')
-      .closest('div[class*="p-4 border border-gray-200"]')!
+      .closest('div[class*="border-neutral-200"]')!
     const editButton = within(proContainer).getByText(/edit/i)
     fireEvent.click(editButton)
 
@@ -160,7 +160,7 @@ describe('PlayersPage Integration Tests', () => {
     // Find Average Player's row and click delete button
     const avgContainer = screen
       .getByText('Average Player')
-      .closest('div[class*="p-4 border border-gray-200"]')!
+      .closest('div[class*="border-neutral-200"]')!
     const deleteButton = within(avgContainer).getByText(/delete/i)
     fireEvent.click(deleteButton)
 

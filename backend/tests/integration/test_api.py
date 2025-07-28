@@ -21,7 +21,7 @@ class TestHealthEndpoints:
 
     def test_health_endpoint(self, client: TestClient):
         """Test health check endpoint"""
-        response = client.get("/health")
+        response = client.get("/api/v1/health")
 
         assert response.status_code == 200
         data = response.json()
@@ -33,7 +33,7 @@ class TestHealthEndpoints:
 
     def test_readiness_endpoint(self, client: TestClient):
         """Test readiness endpoint with database check"""
-        response = client.get("/ready")
+        response = client.get("/api/v1/ready")
 
         assert response.status_code == 200
         data = response.json()
@@ -80,7 +80,9 @@ class TestCORSHeaders:
 
     def test_cors_headers_with_origin(self, client: TestClient):
         """Test that CORS headers are present when origin is provided"""
-        response = client.get("/health", headers={"Origin": "http://localhost:3000"})
+        response = client.get(
+            "/api/v1/health", headers={"Origin": "http://localhost:3000"}
+        )
 
         assert response.status_code == 200
         # CORS headers should be present when origin is provided
@@ -89,7 +91,7 @@ class TestCORSHeaders:
     def test_preflight_request(self, client: TestClient):
         """Test CORS preflight request"""
         response = client.options(
-            "/health",
+            "/api/v1/health",
             headers={
                 "Origin": "http://localhost:3000",
                 "Access-Control-Request-Method": "GET",

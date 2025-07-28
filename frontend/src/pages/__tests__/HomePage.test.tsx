@@ -59,7 +59,7 @@ describe('HomePage', () => {
     )
 
     expect(
-      screen.getByText(/phase 1\.3 trueskill system complete/i)
+      screen.getByText(/phase 1\.5 modern ui design system complete/i)
     ).toBeInTheDocument()
   })
 })

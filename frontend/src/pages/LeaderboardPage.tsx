@@ -1,17 +1,21 @@
-// ABOUTME: Leaderboard page displaying TrueSkill rankings and statistics
-// ABOUTME: Main page for viewing player rankings and competitive analysis
+// ABOUTME: Modern leaderboard page with professional design system
+// ABOUTME: Features beautiful cards and responsive layout for competitive rankings
 
 import React from 'react'
 import Leaderboard from '../components/Leaderboard'
 
 export default function LeaderboardPage() {
   return (
-    <div className="bg-gray-50 py-8">
+    <div className="py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
-          <p className="mt-2 text-gray-600">
-            Player rankings based on TrueSkill rating system
+        <div className="mb-8 text-center">
+          <div className="text-6xl mb-4">🏆</div>
+          <h1 className="text-4xl font-extrabold text-neutral-900 dark:text-dark-text bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+            Leaderboard
+          </h1>
+          <p className="mt-3 text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+            Player rankings based on Microsoft's TrueSkill rating system with
+            uncertainty tracking
           </p>
         </div>
 

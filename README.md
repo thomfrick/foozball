@@ -14,8 +14,24 @@ A modern web application for tracking foosball games and managing player ratings
 
 ### Quick Setup (Full Stack)
 
+Choose your preferred development method:
+
+#### Option 1: Docker Development (Recommended for simplicity)
+
 ```bash
-# 1. Start the database
+# Start full stack with Docker (database + backend + frontend)
+docker-compose up --build
+
+# That's it! Everything runs in Docker:
+# - Frontend: http://localhost:3000
+# - Backend: http://localhost:8000/docs
+# - Database: localhost:5432
+```
+
+#### Option 2: Local Development (Recommended for active development)
+
+```bash
+# 1. Start database only
 docker-compose up db -d && sleep 30
 
 # 2. Install and setup backend
@@ -37,16 +53,6 @@ npm run dev --prefix frontend
 - Backend API: http://localhost:8000/docs (interactive docs)
 - Frontend App: http://localhost:3000 (React app)
 
-### Alternative: Docker Development
-
-```bash
-# Full stack with Docker
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
-
-# Frontend: http://localhost:3000
-# Backend: http://localhost:8000
-```
-
 ### Verify Everything Works
 
 ```bash
@@ -65,7 +71,7 @@ open http://localhost:3000            # React app with API connectivity test
 # Backend tests (119+ tests total)
 uv run --directory backend pytest tests/ -v
 
-# Frontend tests (155+ tests total)
+# Frontend tests (393+ tests total)
 npm run test:run --prefix frontend
 
 # End-to-End tests (3 tests - requires services running)
@@ -74,9 +80,9 @@ cd e2e-tests && npx playwright test
 
 ## 📊 Current Status
 
-**Last Updated:** July 27, 2025
-**Current Phase:** Phase 1.5 Modern UI Design System ⏳ IN PROGRESS
-**Overall Progress:** 🎨 MVP Complete + Modern UI Design System Implementation!
+**Last Updated:** July 28, 2025
+**Current Phase:** Phase 1.5 Modern UI Design System ✅ COMPLETE
+**Overall Progress:** 🎨 MVP Complete + Professional UI Design System with comprehensive test coverage!
 
 See the [FEATURES_PLAN.md](FEATURES_PLAN.md) for the complete development roadmap.
 
@@ -93,30 +99,38 @@ See the [FEATURES_PLAN.md](FEATURES_PLAN.md) for the complete development roadma
 - **Comprehensive testing** (119+ tests total, 90%+ coverage)
 - **Production-ready configuration** with environment-based settings
 
-#### Frontend MVP Complete (Phases 0.2 → 1.3)
+#### Frontend MVP + Modern UI Complete (Phases 0.2 → 1.5)
 - **Modern React 19** with TypeScript and Vite
 - **Complete Player Management** - Add, edit, delete, search with pagination
-- **Complete Game Recording** - Full game entry with player selection
+- **Complete Game Recording** - Full game entry with player selection and games page
 - **TrueSkill Leaderboard** - Professional ranking with uncertainty indicators
 - **Rating Displays** - Beautiful TrueSkill visualization with tooltips
-- **Responsive Design** - Mobile-first with Tailwind CSS
+- **Professional UI Design System** - Modern Button and Card components with variants
+- **Dark/Light Theme Support** - System preference detection with toggle
+- **Enhanced Error Boundaries** - Comprehensive error handling with recovery
+- **Responsive Design** - Mobile-first with Tailwind CSS and mobile responsiveness testing
 - **Type-safe API integration** with TanStack Query
-- **Comprehensive testing** (155+ tests passing)
+- **Comprehensive testing** (393+ tests passing with extensive coverage)
 
-#### Advanced Features Complete
+#### Advanced Features Complete (Phases 1.3 → 1.5)
 - **TrueSkill Algorithm** - Accurate skill assessment (not just win/loss)
 - **Conservative Ratings** - 99.7% confidence intervals (μ - 3σ)
 - **Uncertainty Visualization** - High/Medium/Low certainty indicators
 - **Educational Tooltips** - Explains TrueSkill system to users
 - **Rating History** - Complete audit trail of rating changes
-- **Professional UI/UX** - Polished interface with accessibility features
+- **Professional UI Design System** - Modern component library with consistent styling
+- **Theme Management** - Dark/light mode with system preference detection
+- **Enhanced Error Handling** - Robust error boundaries with user-friendly recovery
+- **Health Monitoring** - Comprehensive health endpoints for system monitoring
+- **Mobile-First Design** - Fully responsive with extensive mobile testing
+- **Accessibility Compliance** - WCAG 2.1 AA compliant with comprehensive testing
 
 ## 🎯 Next Steps
 
-1.  **Phase 1.5 - Modern Professional UI Design System** ⏳ (CRITICAL - Transform basic styling to professional interface)
-2.  **Phase 2.1 - Team Games (2v2)** (TrueSkill team ratings)
-3.  **Phase 2.2 - Data Visualization** (Rating progression charts)
-4.  **Phase 2.3 - Enhanced Statistics** (Head-to-head, trends, analytics)
+1.  **Phase 2.1 - Team Games (2v2)** (TrueSkill team ratings with advanced game modes)
+2.  **Phase 2.2 - Data Visualization** (Rating progression charts and interactive graphs)
+3.  **Phase 2.3 - Enhanced Statistics** (Head-to-head, trends, analytics dashboard)
+4.  **Phase 2.4 - Advanced Features** (Tournaments, seasons, player profiles)
 
 ## 📚 Documentation
 

@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { useCreatePlayer } from '../hooks/useApi'
 import type { PlayerCreate } from '../types/player'
-import { LoadingButton } from './LoadingSpinner'
+import { OutlineButton, PrimaryButton } from './ui/Button'
 
 interface AddPlayerFormProps {
   onSuccess?: () => void
@@ -95,8 +95,8 @@ export default function AddPlayerForm({
     }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+    <div className="bg-neutral-0 dark:bg-dark-surface rounded-lg shadow-soft p-6 transition-colors duration-200 border border-neutral-100 dark:border-dark-border">
+      <h2 className="text-2xl font-bold text-neutral-900 dark:text-dark-text mb-6">
         Add New Player
       </h2>
 
@@ -105,7 +105,7 @@ export default function AddPlayerForm({
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2"
           >
             Name *
           </label>
@@ -114,10 +114,10 @@ export default function AddPlayerForm({
             id="name"
             value={formData.name}
             onChange={handleInputChange('name')}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+            className={`w-full px-4 py-3 border rounded-lg shadow-sm bg-neutral-0 dark:bg-dark-surface text-neutral-900 dark:text-dark-text placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 ${
               errors.name
-                ? 'border-red-300 focus:border-red-500'
-                : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
+                ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500'
+                : 'border-neutral-300 dark:border-dark-border focus:border-primary-500'
             }`}
             placeholder="Enter player name"
             disabled={createPlayerMutation.isPending}
@@ -129,7 +129,7 @@ export default function AddPlayerForm({
           {errors.name && (
             <p
               id="name-error"
-              className="mt-1 text-sm text-red-600"
+              className="mt-2 text-sm text-danger-600 dark:text-danger-400"
               role="alert"
             >
               {errors.name}
@@ -141,7 +141,7 @@ export default function AddPlayerForm({
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2"
           >
             Email (optional)
           </label>
@@ -150,10 +150,10 @@ export default function AddPlayerForm({
             id="email"
             value={formData.email}
             onChange={handleInputChange('email')}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 ${
+            className={`w-full px-4 py-3 border rounded-lg shadow-sm bg-neutral-0 dark:bg-dark-surface text-neutral-900 dark:text-dark-text placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 ${
               errors.email
-                ? 'border-red-300 focus:border-red-500'
-                : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
+                ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500'
+                : 'border-neutral-300 dark:border-dark-border focus:border-primary-500'
             }`}
             placeholder="Enter email address"
             disabled={createPlayerMutation.isPending}
@@ -164,7 +164,7 @@ export default function AddPlayerForm({
           {errors.email && (
             <p
               id="email-error"
-              className="mt-1 text-sm text-red-600"
+              className="mt-2 text-sm text-danger-600 dark:text-danger-400"
               role="alert"
             >
               {errors.email}
@@ -175,34 +175,36 @@ export default function AddPlayerForm({
         {/* Submit error */}
         {errors.submit && (
           <div
-            className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md"
+            className="p-4 bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 rounded-lg"
             role="alert"
           >
-            <p className="text-sm text-red-600 dark:text-red-400">
+            <p className="text-sm text-danger-600 dark:text-danger-400">
               {errors.submit}
             </p>
           </div>
         )}
 
         {/* Buttons */}
-        <div className="flex gap-3 pt-4">
-          <LoadingButton
+        <div className="flex gap-3 pt-6">
+          <PrimaryButton
             type="submit"
             isLoading={createPlayerMutation.isPending}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            loadingText="Creating..."
+            fullWidth
+            size="lg"
           >
             Create Player
-          </LoadingButton>
+          </PrimaryButton>
 
           {onCancel && (
-            <button
+            <OutlineButton
               type="button"
               onClick={onCancel}
               disabled={createPlayerMutation.isPending}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              size="lg"
             >
               Cancel
-            </button>
+            </OutlineButton>
           )}
         </div>
       </form>

@@ -7,6 +7,8 @@ import { useDebounce } from '../hooks/useDebounce'
 import type { Player } from '../types/player'
 import { LoadingSkeleton } from './LoadingSpinner'
 import { CompactTrueSkillRating } from './TrueSkillRating'
+import { GhostButton, OutlineButton } from './ui/Button'
+import Card, { CardHeader } from './ui/Card'
 
 interface PlayerListProps {
   onPlayerSelect?: (player: Player) => void
@@ -56,36 +58,31 @@ export default function PlayerList({
 
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          Players
-        </h2>
-        <div className="mb-4">
-          <div className="w-full h-10 bg-gray-200 dark:bg-gray-600 rounded-md animate-pulse"></div>
+      <Card>
+        <CardHeader title="Players" />
+        <div className="mb-6">
+          <div className="w-full h-12 bg-neutral-200 dark:bg-dark-border rounded-lg animate-pulse"></div>
         </div>
         <LoadingSkeleton rows={pageSize} />
-      </div>
+      </Card>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            Players
-          </h2>
-          <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-red-600 mb-2">Failed to load players</p>
-            <button
-              onClick={() => refetch()}
-              className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-            >
+      <Card>
+        <CardHeader title="Players" />
+        <div className="text-center py-8">
+          <div className="p-6 bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 rounded-lg">
+            <p className="text-danger-600 dark:text-danger-400 mb-4 font-medium">
+              Failed to load players
+            </p>
+            <OutlineButton onClick={() => refetch()} size="sm">
               Try Again
-            </button>
+            </OutlineButton>
           </div>
         </div>
-      </div>
+      </Card>
     )
   }
 
@@ -93,64 +90,91 @@ export default function PlayerList({
   const totalPages = playersData?.total_pages || 1
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-200">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Players
-        </h2>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          {playersData?.total || 0} total players
-        </span>
-      </div>
+    <Card>
+      <CardHeader
+        title="Players"
+        subtitle={`${playersData?.total || 0} total players`}
+      />
 
       {/* Search */}
-      <div className="mb-4">
-        <input
-          type="text"
-          value={search}
-          onChange={handleSearchChange}
-          placeholder="Search players..."
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-        />
+      <div className="mb-6">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg
+              className="h-5 w-5 text-neutral-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            value={search}
+            onChange={handleSearchChange}
+            placeholder="Search players..."
+            className="w-full pl-10 pr-4 py-3 border border-neutral-300 dark:border-dark-border bg-neutral-0 dark:bg-dark-surface text-neutral-900 dark:text-dark-text placeholder-neutral-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+          />
+        </div>
       </div>
 
       {/* Players list */}
       {players.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-gray-500 dark:text-gray-400">
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">👥</div>
+          <p className="text-neutral-500 dark:text-neutral-400 text-lg">
             {search
               ? 'No players found matching your search.'
               : 'No players yet.'}
           </p>
+          {search && (
+            <p className="text-neutral-400 dark:text-neutral-500 text-sm mt-2">
+              Try adjusting your search terms
+            </p>
+          )}
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {players.map((player) => (
             <div
               key={player.id}
-              className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+              className="group p-4 border border-neutral-200 dark:border-dark-border rounded-lg hover:bg-neutral-50 dark:hover:bg-dark-border transition-all duration-200 hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800"
             >
               {onPlayerSelect ? (
                 <button
                   type="button"
-                  className="flex-1 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded"
+                  className="flex-1 text-left focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-inset rounded-lg"
                   onClick={() => onPlayerSelect(player)}
                   aria-label={`View details for ${player.name}`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">
-                        {player.name}
-                      </h3>
-                      {player.email && (
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          {player.email}
-                        </p>
-                      )}
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-4">
+                      {/* Avatar */}
+                      <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center group-hover:bg-primary-200 dark:group-hover:bg-primary-800/30 transition-colors">
+                        <span className="text-lg font-bold text-primary-600 dark:text-primary-400">
+                          {player.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-neutral-900 dark:text-dark-text group-hover:text-primary-700 dark:group-hover:text-primary-300 transition-colors">
+                          {player.name}
+                        </h3>
+                        {player.email && (
+                          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                            {player.email}
+                          </p>
+                        )}
+                      </div>
                     </div>
                     <div className="text-right">
                       <CompactTrueSkillRating player={player} />
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
                         {player.games_played} games •{' '}
                         {player.win_percentage.toFixed(1)}% wins
                       </p>
@@ -158,53 +182,61 @@ export default function PlayerList({
                   </div>
                 </button>
               ) : (
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    {/* Avatar */}
+                    <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center">
+                      <span className="text-lg font-bold text-primary-600 dark:text-primary-400">
+                        {player.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">
+                      <h3 className="font-semibold text-neutral-900 dark:text-dark-text">
                         {player.name}
                       </h3>
                       {player.email && (
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
                           {player.email}
                         </p>
                       )}
                     </div>
-                    <div className="text-right">
-                      <CompactTrueSkillRating player={player} />
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {player.games_played} games •{' '}
-                        {player.win_percentage.toFixed(1)}% wins
-                      </p>
-                    </div>
+                  </div>
+                  <div className="text-right">
+                    <CompactTrueSkillRating player={player} />
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      {player.games_played} games •{' '}
+                      {player.win_percentage.toFixed(1)}% wins
+                    </p>
                   </div>
                 </div>
               )}
 
               {/* Actions */}
               {showActions && (
-                <div className="ml-4 flex gap-2">
+                <div className="ml-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   {onPlayerEdit && (
-                    <button
+                    <GhostButton
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation()
                         onPlayerEdit(player)
                       }}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:hover:bg-primary-900/20"
                     >
                       Edit
-                    </button>
+                    </GhostButton>
                   )}
                   {onPlayerDelete && (
-                    <button
+                    <GhostButton
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation()
                         onPlayerDelete(player)
                       }}
-                      className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      className="text-danger-600 hover:text-danger-700 hover:bg-danger-50 dark:hover:bg-danger-900/20"
                     >
                       Delete
-                    </button>
+                    </GhostButton>
                   )}
                 </div>
               )}
@@ -215,28 +247,66 @@ export default function PlayerList({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-6">
-          <button
+        <div className="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-neutral-100 dark:border-dark-border">
+          <OutlineButton
+            size="sm"
             onClick={() => handlePageChange(page - 1)}
             disabled={page <= 1}
-            className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            leftIcon={
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            }
           >
             Previous
-          </button>
+          </OutlineButton>
 
-          <span className="text-sm text-gray-600 dark:text-gray-300">
-            Page {page} of {totalPages}
-          </span>
+          <div className="flex items-center gap-1">
+            <span className="text-sm text-neutral-600 dark:text-neutral-400">
+              Page
+            </span>
+            <span className="text-sm font-semibold text-neutral-900 dark:text-dark-text px-2 py-1 bg-primary-50 dark:bg-primary-900/20 rounded">
+              {page}
+            </span>
+            <span className="text-sm text-neutral-600 dark:text-neutral-400">
+              of {totalPages}
+            </span>
+          </div>
 
-          <button
+          <OutlineButton
+            size="sm"
             onClick={() => handlePageChange(page + 1)}
             disabled={page >= totalPages}
-            className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            rightIcon={
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            }
           >
             Next
-          </button>
+          </OutlineButton>
         </div>
       )}
-    </div>
+    </Card>
   )
 }

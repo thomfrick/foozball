@@ -105,9 +105,9 @@ describe('AddPlayerForm Integration Tests', () => {
     fireEvent.change(nameInput, { target: { value: 'Loading Test Player' } })
     fireEvent.click(submitButton)
 
-    // Check for loading state (button should be disabled with loading styling)
+    // Check for loading state (button should be disabled)
     expect(submitButton).toBeDisabled()
-    expect(submitButton).toHaveClass('opacity-75', 'cursor-not-allowed')
+    // Disabled styling is handled by CSS pseudo-classes
 
     // Wait for submission to complete
     await waitFor(() => {

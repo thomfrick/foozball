@@ -8,7 +8,7 @@ Comprehensive testing infrastructure with unit, integration, and end-to-end test
 # Backend tests (119+ tests total)
 uv run --directory backend pytest tests/ -v
 
-# Frontend tests (172+ tests total)
+# Frontend tests (393+ tests total)
 npm run test:run --prefix frontend
 
 # End-to-End tests (requires services running)
@@ -21,10 +21,10 @@ npm run test:coverage --prefix frontend
 
 ## 📊 Test Coverage Overview
 
-- **Backend**: 119+ tests (unit + integration + TrueSkill + error scenarios)
-- **Frontend**: 172+ tests (unit + integration with MSW + accessibility + responsive)
+- **Backend**: 119+ tests (unit + integration + TrueSkill + health endpoints + error scenarios)
+- **Frontend**: 393+ tests (unit + integration with MSW + UI design system + accessibility + responsive + mobile)
 - **E2E**: Playwright tests with isolated project structure
-- **Total Coverage**: Database, API, UI, TrueSkill, security, performance, concurrency, accessibility
+- **Total Coverage**: Database, API, UI, TrueSkill, design system, theme management, error boundaries, health monitoring, security, performance, concurrency, accessibility
 
 ## 🏗️ Test Architecture
 
@@ -34,11 +34,15 @@ npm run test:coverage --prefix frontend
 - **TrueSkill Tests**: Rating calculations, history tracking, game processing
 - **Error Scenarios**: Security, concurrency, performance edge cases
 
-### Frontend Testing (172+ tests) ✅ 100% SUCCESS RATE
-- **Unit Tests**: Component behavior, hooks, utilities, TrueSkill display
+### Frontend Testing (393+ tests) ✅ 100% SUCCESS RATE
+- **Unit Tests**: Component behavior, hooks, utilities, TrueSkill display, UI design system
 - **Integration Tests**: Complete API interaction with Mock Service Worker
+- **UI Design System Tests**: Button components (6 variants), Card components (StatsCard, PlayerCard, GameCard)
+- **Theme System Tests**: Dark/light mode toggle, system preference detection, localStorage persistence
+- **Error Boundary Tests**: Enhanced error handling with recovery mechanisms
 - **Accessibility Tests**: WCAG 2.1 AA compliance, screen reader support
-- **Responsive Design Tests**: Mobile, tablet, desktop layouts
+- **Responsive Design Tests**: Mobile, tablet, desktop layouts with comprehensive mobile testing
+- **Health Monitoring Tests**: Backend health endpoints integration testing
 
 ### End-to-End Testing (3 tests)
 - **Navigation**: Basic app routing and page loads

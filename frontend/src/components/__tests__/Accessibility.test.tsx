@@ -48,15 +48,25 @@ describe('Accessibility Tests', () => {
       )
 
       // Check that navigation links are focusable (using more specific selectors)
+      // Check main navigation is present
+      screen.getByRole('navigation', { name: 'Main navigation' })
       const homeLink = screen.getByRole('link', { name: 'Home' })
-      const leaderboardLink = screen.getByRole('link', {
+      const leaderboardLinks = screen.getAllByRole('link', {
         name: '🏆 Leaderboard',
       })
-      const playersLink = screen.getByRole('link', { name: '👥 Players' })
-      const aboutLink = screen.getByRole('link', { name: 'ℹ️ About' })
+      const gamesLinks = screen.getAllByRole('link', { name: '🎮 Games' })
+      const playersLinks = screen.getAllByRole('link', { name: '👥 Players' })
+      const aboutLinks = screen.getAllByRole('link', { name: 'ℹ️ About' })
+
+      // Get the first (main nav) links
+      const leaderboardLink = leaderboardLinks[0]
+      const gamesLink = gamesLinks[0]
+      const playersLink = playersLinks[0]
+      const aboutLink = aboutLinks[0]
 
       expect(homeLink).toBeInTheDocument()
       expect(leaderboardLink).toBeInTheDocument()
+      expect(gamesLink).toBeInTheDocument()
       expect(playersLink).toBeInTheDocument()
       expect(aboutLink).toBeInTheDocument()
 

@@ -16,6 +16,7 @@ export default function ThemeToggle({
 
   return (
     <button
+      type="button"
       onClick={toggleTheme}
       className={`
         relative inline-flex items-center justify-center

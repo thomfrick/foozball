@@ -341,8 +341,8 @@ describe('AddGameForm Integration Tests', () => {
       expect(submitButton).toBeDisabled()
     })
 
-    // Button should have loading state (opacity changes)
-    expect(submitButton).toHaveClass('opacity-75', 'cursor-not-allowed')
+    // Button should have loading state (button is disabled when loading)
+    // The actual disabled styling is handled by CSS classes on disabled state
 
     // Wait for completion (button no longer loading)
     await waitFor(

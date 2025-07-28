@@ -16,17 +16,17 @@ export default function Layout({ children }: LayoutProps) {
   const isActive = (path: string) => location.pathname === path
 
   const navLinkClass = (path: string) =>
-    `px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+    `px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 ${
       isActive(path)
-        ? 'bg-white text-blue-600'
-        : 'text-white hover:bg-blue-700 hover:text-white'
+        ? 'bg-neutral-0 text-primary-600 shadow-sm'
+        : 'text-white hover:bg-primary-700 hover:text-white hover:shadow-md'
     }`
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-colors duration-200">
+    <div className="min-h-screen flex flex-col transition-colors duration-200">
       {/* Header Navigation */}
       <header
-        className="bg-blue-600 dark:bg-blue-800 shadow-lg transition-colors duration-200"
+        className="bg-primary-600 dark:bg-primary-700 shadow-large transition-colors duration-200"
         role="banner"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,10 +34,12 @@ export default function Layout({ children }: LayoutProps) {
             {/* Logo/Brand */}
             <Link
               to="/"
-              className="flex items-center space-x-2 text-white font-bold text-xl hover:text-blue-200 transition-colors"
+              className="flex items-center space-x-3 text-white font-bold text-xl hover:text-primary-100 transition-all duration-200 transform hover:scale-105"
             >
-              <span>🏓</span>
-              <span>Foosball Tracker</span>
+              <span className="text-2xl">🏓</span>
+              <span className="font-extrabold tracking-tight">
+                Foosball Tracker
+              </span>
             </Link>
 
             {/* Navigation Links */}
@@ -51,6 +53,9 @@ export default function Layout({ children }: LayoutProps) {
               </Link>
               <Link to="/leaderboard" className={navLinkClass('/leaderboard')}>
                 🏆 Leaderboard
+              </Link>
+              <Link to="/games" className={navLinkClass('/games')}>
+                🎮 Games
               </Link>
               <Link to="/players" className={navLinkClass('/players')}>
                 👥 Players
@@ -69,7 +74,7 @@ export default function Layout({ children }: LayoutProps) {
                 <button
                   type="button"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="text-white hover:text-blue-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 rounded-md"
+                  className="text-white hover:text-primary-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600 rounded-lg p-2 transition-all duration-200 transform hover:scale-105"
                   aria-expanded={isMobileMenuOpen}
                   aria-label="Toggle navigation menu"
                 >
@@ -108,14 +113,14 @@ export default function Layout({ children }: LayoutProps) {
               role="navigation"
               aria-label="Mobile navigation"
             >
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-blue-700">
+              <div className="px-2 pt-2 pb-3 space-y-2 sm:px-3 border-t border-primary-700">
                 <Link
                   to="/"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
                     isActive('/')
-                      ? 'bg-white text-blue-600'
-                      : 'text-white hover:bg-blue-700'
+                      ? 'bg-neutral-0 text-primary-600 shadow-sm'
+                      : 'text-white hover:bg-primary-700 hover:shadow-md'
                   }`}
                 >
                   Home
@@ -123,21 +128,32 @@ export default function Layout({ children }: LayoutProps) {
                 <Link
                   to="/leaderboard"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
                     isActive('/leaderboard')
-                      ? 'bg-white text-blue-600'
-                      : 'text-white hover:bg-blue-700'
+                      ? 'bg-neutral-0 text-primary-600 shadow-sm'
+                      : 'text-white hover:bg-primary-700 hover:shadow-md'
                   }`}
                 >
                   🏆 Leaderboard
                 </Link>
                 <Link
+                  to="/games"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
+                    isActive('/games')
+                      ? 'bg-neutral-0 text-primary-600 shadow-sm'
+                      : 'text-white hover:bg-primary-700 hover:shadow-md'
+                  }`}
+                >
+                  🎮 Games
+                </Link>
+                <Link
                   to="/players"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
                     isActive('/players')
-                      ? 'bg-white text-blue-600'
-                      : 'text-white hover:bg-blue-700'
+                      ? 'bg-neutral-0 text-primary-600 shadow-sm'
+                      : 'text-white hover:bg-primary-700 hover:shadow-md'
                   }`}
                 >
                   👥 Players
@@ -145,10 +161,10 @@ export default function Layout({ children }: LayoutProps) {
                 <Link
                   to="/about"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
                     isActive('/about')
-                      ? 'bg-white text-blue-600'
-                      : 'text-white hover:bg-blue-700'
+                      ? 'bg-neutral-0 text-primary-600 shadow-sm'
+                      : 'text-white hover:bg-primary-700 hover:shadow-md'
                   }`}
                 >
                   ℹ️ About
@@ -160,23 +176,27 @@ export default function Layout({ children }: LayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1" role="main">
+      <main
+        className="flex-1 bg-neutral-50 dark:bg-dark-background"
+        role="main"
+      >
         {children}
       </main>
 
       {/* Footer */}
       <footer
-        className="bg-gray-800 dark:bg-gray-950 text-white py-8 transition-colors duration-200"
+        className="bg-neutral-800 dark:bg-dark-background text-white py-8 transition-colors duration-200 border-t border-neutral-200 dark:border-dark-border"
         role="contentinfo"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Brand */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">
-                🏓 Foosball Tracker
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <span className="text-xl">🏓</span>
+                <span>Foosball Tracker</span>
               </h3>
-              <p className="text-gray-400 text-sm">
+              <p className="text-neutral-400 text-sm leading-relaxed">
                 Track your foosball games and skill progression with TrueSkill
                 ratings.
               </p>
@@ -184,30 +204,42 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Quick Links */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2 text-sm">
+              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+              <ul className="space-y-3 text-sm">
                 <li>
                   <Link
                     to="/leaderboard"
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
                   >
-                    Leaderboard
+                    <span>🏆</span>
+                    <span>Leaderboard</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/games"
+                    className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span>🎮</span>
+                    <span>Games</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/players"
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
                   >
-                    Players
+                    <span>👥</span>
+                    <span>Players</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/about"
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
                   >
-                    About
+                    <span>ℹ️</span>
+                    <span>About</span>
                   </Link>
                 </li>
               </ul>
@@ -215,18 +247,22 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Status */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Status</h3>
-              <p className="text-gray-400 text-sm">
-                Phase 1.3 TrueSkill System Complete! ✅
-              </p>
-              <p className="text-gray-400 text-sm mt-2">
-                Now implementing Phase 1.4 UI/UX enhancements.
-              </p>
+              <h3 className="text-lg font-bold mb-4">Status</h3>
+              <div className="space-y-2">
+                <p className="text-success-400 text-sm font-medium flex items-center gap-2">
+                  <span className="w-2 h-2 bg-success-400 rounded-full"></span>
+                  Phase 1.4 Complete!
+                </p>
+                <p className="text-primary-400 text-sm font-medium flex items-center gap-2">
+                  <span className="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></span>
+                  Phase 1.5 Modern UI System
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="border-t border-gray-700 mt-8 pt-6 text-center">
-            <p className="text-gray-400 text-sm">
+          <div className="border-t border-neutral-700 dark:border-dark-border mt-8 pt-6 text-center">
+            <p className="text-neutral-400 text-sm">
               © 2025 Foosball Tracker. Built with React, FastAPI, and
               TrueSkill.
             </p>

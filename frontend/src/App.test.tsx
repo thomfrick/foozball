@@ -33,6 +33,7 @@ describe('App', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByText('Foosball Tracker')).toBeInTheDocument()
+    expect(screen.getByRole('banner')).toBeInTheDocument()
+    expect(screen.getAllByText('Foosball Tracker')).toHaveLength(2) // Header and footer
   })
 })

@@ -1,16 +1,14 @@
 # ABOUTME: FastAPI application entry point and configuration
 # ABOUTME: Sets up the main app instance, middleware, and route registration
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError, OperationalError
-from sqlalchemy.orm import Session
 
+from app.api.v1.health import router as health_router
 from app.api.v1.router import router as api_v1_router
 from app.core.config import config
-from app.db.database import get_db
 
 app = FastAPI(
     title="Foosball TrueSkill Tracker API",
@@ -50,6 +48,9 @@ app.add_middleware(
 # Include API routers
 app.include_router(api_v1_router)
 
+# Include health endpoints at root level for monitoring
+app.include_router(health_router)
+
 
 @app.get("/")
 async def root():
@@ -60,39 +61,3 @@ async def root():
         "status": "healthy",
         "environment": config.environment,
     }
-
-
-@app.get("/health")
-async def health_check():
-    """Basic health check endpoint"""
-    return {
-        "status": "healthy",
-        "service": "foosball-api",
-        "version": config.version,
-        "environment": config.environment,
-    }
-
-
-@app.get("/ready")
-async def readiness_check(db: Session = Depends(get_db)):
-    """Detailed readiness check including database connectivity"""
-    try:
-        # Test database connection
-        db.execute(text("SELECT 1"))
-
-        return {
-            "status": "ready",
-            "service": "foosball-api",
-            "version": config.version,
-            "environment": config.environment,
-            "checks": {"database": "healthy"},
-        }
-    except Exception as e:
-        raise HTTPException(
-            status_code=503,
-            detail={
-                "status": "not_ready",
-                "error": str(e),
-                "checks": {"database": "unhealthy"},
-            },
-        )

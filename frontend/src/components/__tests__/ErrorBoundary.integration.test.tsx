@@ -391,8 +391,8 @@ describe('Error Boundary and Loading States Integration Tests', () => {
         expect(submitButton).toBeDisabled()
       })
 
-      // Button should have loading state styling
-      expect(submitButton).toHaveClass('opacity-75', 'cursor-not-allowed')
+      // Button should be disabled during loading
+      // CSS styling is handled by disabled pseudo-classes
 
       // Resolve the promise to complete submission
       resolvePromise!(null)
