@@ -120,13 +120,13 @@ We'll build this in phases, starting with core functionality and adding features
 - [x] 1.2.T.F.5 Test form validation with user interactions ✅
 - [x] 1.2.T.F.6 Test responsive design across device sizes ✅
 
-#### End-to-End Tests (1.2.T.E2E)
-- [ ] 1.2.T.E2E.1 Test complete game recording workflow
-- [ ] 1.2.T.E2E.2 Test game history browsing and filtering
-- [ ] 1.2.T.E2E.3 Test player selection and winner validation
-- [ ] 1.2.T.E2E.4 Test error scenarios and recovery
-- [ ] 1.2.T.E2E.5 Test cross-browser compatibility
-- [ ] 1.2.T.E2E.6 Test mobile game recording workflow
+#### End-to-End Tests (1.2.T.E2E) ✅ COMPLETED (6/6)
+- [x] 1.2.T.E2E.1 Test complete game recording workflow ✅ (e2e-tests/tests/game-recording.spec.ts)
+- [x] 1.2.T.E2E.2 Test game history browsing and filtering ✅ (e2e-tests/tests/game-history.spec.ts)
+- [x] 1.2.T.E2E.3 Test player selection and winner validation ✅ (frontend/e2e/player-selection.spec.ts)
+- [x] 1.2.T.E2E.4 Test error scenarios and recovery ✅ (e2e-tests/tests/error-scenarios.spec.ts)
+- [x] 1.2.T.E2E.5 Test cross-browser compatibility ✅ (Firefox, Safari, Edge, Chromium all configured)
+- [x] 1.2.T.E2E.6 Test mobile game recording workflow ✅ (e2e-tests/tests/mobile-workflow.spec.ts)
 
 ### 1.3 Basic TrueSkill System
 
