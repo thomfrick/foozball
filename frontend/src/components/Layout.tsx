@@ -63,6 +63,9 @@ export default function Layout({ children }: LayoutProps) {
               <Link to="/team-games" className={navLinkClass('/team-games')}>
                 🤝 Team Games
               </Link>
+              <Link to="/analytics" className={navLinkClass('/analytics')}>
+                📊 Analytics
+              </Link>
               <Link to="/players" className={navLinkClass('/players')}>
                 🧑‍🤝‍🧑 Players
               </Link>
@@ -176,6 +179,17 @@ export default function Layout({ children }: LayoutProps) {
                   🤝 Team Games
                 </Link>
                 <Link
+                  to="/analytics"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
+                    isActive('/analytics')
+                      ? 'bg-neutral-0 text-primary-600 shadow-sm'
+                      : 'text-white hover:bg-primary-700 hover:shadow-md'
+                  }`}
+                >
+                  📊 Analytics
+                </Link>
+                <Link
                   to="/players"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
@@ -268,6 +282,15 @@ export default function Layout({ children }: LayoutProps) {
                   >
                     <span>🤝</span>
                     <span>Team Games</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/analytics"
+                    className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span>📊</span>
+                    <span>Analytics</span>
                   </Link>
                 </li>
                 <li>

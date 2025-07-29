@@ -10,12 +10,17 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.models.game import Game
 from app.models.player import Player
+from app.models.rating_history import RatingHistory
 from app.schemas.game import GameListResponse
 from app.schemas.player import (
     PlayerCreate,
     PlayerListResponse,
     PlayerResponse,
     PlayerUpdate,
+)
+from app.schemas.rating_history import (
+    PlayerRatingProgression,
+    RatingHistoryListResponse,
 )
 
 router = APIRouter(prefix="/players", tags=["players"])
@@ -254,4 +259,93 @@ async def get_player_games(
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Failed to retrieve player games: {str(e)}"
+        )
+
+
+@router.get("/{player_id}/rating-history", response_model=RatingHistoryListResponse)
+async def get_player_rating_history(
+    player_id: int,
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(
+        50, ge=1, le=200, description="Number of rating entries per page"
+    ),
+    db: Session = Depends(get_db),
+):
+    """Get rating history for a specific player"""
+    try:
+        # Check if player exists
+        player = db.query(Player).filter(Player.id == player_id).first()
+        if not player:
+            raise HTTPException(status_code=404, detail="Player not found")
+
+        # Build query for rating history
+        query = (
+            db.query(RatingHistory)
+            .filter(RatingHistory.player_id == player_id)
+            .order_by(RatingHistory.created_at.asc())
+        )
+
+        # Get total count
+        total = query.count()
+
+        # Apply pagination
+        offset = (page - 1) * page_size
+        rating_history = query.offset(offset).limit(page_size).all()
+
+        # Calculate pagination metadata
+        total_pages = math.ceil(total / page_size)
+
+        return RatingHistoryListResponse(
+            rating_history=rating_history,
+            total=total,
+            page=page,
+            page_size=page_size,
+            total_pages=total_pages,
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to retrieve player rating history: {str(e)}",
+        )
+
+
+@router.get("/{player_id}/rating-progression", response_model=PlayerRatingProgression)
+async def get_player_rating_progression(
+    player_id: int,
+    limit: int = Query(
+        100, ge=1, le=500, description="Maximum number of rating entries"
+    ),
+    db: Session = Depends(get_db),
+):
+    """Get rating progression data for charts"""
+    try:
+        # Check if player exists
+        player = db.query(Player).filter(Player.id == player_id).first()
+        if not player:
+            raise HTTPException(status_code=404, detail="Player not found")
+
+        # Get rating history ordered by creation time
+        rating_history = (
+            db.query(RatingHistory)
+            .filter(RatingHistory.player_id == player_id)
+            .order_by(RatingHistory.created_at.asc())
+            .limit(limit)
+            .all()
+        )
+
+        return PlayerRatingProgression(
+            player_id=player.id,
+            player_name=player.name,
+            ratings=rating_history,
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to retrieve player rating progression: {str(e)}",
         )

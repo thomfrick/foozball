@@ -31,6 +31,12 @@ class TestDatabase:
 
     def create_database(self):
         """Create test database if it doesn't exist"""
+        # In Docker environment, we use the existing dev database
+        # so no need to create a separate test database
+        if "foosball_dev" in self.config.database_url:
+            # Using existing dev database in Docker, skip creation
+            return
+
         # Connect to postgres database to create test database
         postgres_url = self.config.database_url.replace("foosball_test", "postgres")
         postgres_engine = create_engine(postgres_url)

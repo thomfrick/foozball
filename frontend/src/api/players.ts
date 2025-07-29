@@ -5,7 +5,9 @@ import type {
   Player,
   PlayerCreate,
   PlayerListResponse,
+  PlayerRatingProgression,
   PlayerUpdate,
+  RatingHistoryListResponse,
 } from '../types/player'
 import apiClient from './client'
 
@@ -50,5 +52,36 @@ export const playersApi = {
   // Delete a player (soft delete)
   deletePlayer: (id: number): Promise<void> => {
     return apiClient.delete<void>(`/players/${id}`)
+  },
+
+  // Get rating history for a player
+  getRatingHistory: (
+    id: number,
+    params?: {
+      page?: number
+      page_size?: number
+    }
+  ): Promise<RatingHistoryListResponse> => {
+    const searchParams = new URLSearchParams()
+
+    if (params?.page) searchParams.set('page', params.page.toString())
+    if (params?.page_size)
+      searchParams.set('page_size', params.page_size.toString())
+
+    const query = searchParams.toString()
+    return apiClient.get<RatingHistoryListResponse>(
+      `/players/${id}/rating-history${query ? `?${query}` : ''}`
+    )
+  },
+
+  // Get rating progression for charts
+  getRatingProgression: (
+    id: number,
+    limit?: number
+  ): Promise<PlayerRatingProgression> => {
+    const params = limit ? `?limit=${limit}` : ''
+    return apiClient.get<PlayerRatingProgression>(
+      `/players/${id}/rating-progression${params}`
+    )
   },
 }

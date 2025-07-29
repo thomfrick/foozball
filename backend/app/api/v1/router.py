@@ -3,6 +3,7 @@
 
 from fastapi import APIRouter
 
+from app.api.v1.analytics import router as analytics_router
 from app.api.v1.games import router as games_router
 from app.api.v1.health import router as health_router
 from app.api.v1.players import router as players_router
@@ -13,6 +14,7 @@ from app.api.v1.teams import router as teams_router
 router = APIRouter(prefix="/api/v1")
 
 # Include all sub-routers
+router.include_router(analytics_router)
 router.include_router(games_router)
 router.include_router(health_router)
 router.include_router(players_router)

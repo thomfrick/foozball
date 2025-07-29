@@ -8,7 +8,9 @@ class TestConfig(AppConfig):
     """Test configuration with overrides for testing environment"""
 
     # Override database settings for test database
-    db_name: str = "foosball_test"
+    # Use development database in Docker environment for tests
+    db_name: str = "foosball_dev"  # Use dev DB in Docker for tests
+    db_host: str = "db"  # Docker service name
 
     # Test-specific settings
     environment: str = "testing"

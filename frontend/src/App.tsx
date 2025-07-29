@@ -5,6 +5,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import ErrorBoundary from './components/ErrorBoundary'
 import Layout from './components/Layout'
 import AboutPage from './pages/AboutPage'
+import AnalyticsPage from './pages/AnalyticsPage'
 import GamesPage from './pages/GamesPage'
 import HomePage from './pages/HomePage'
 import LeaderboardPage from './pages/LeaderboardPage'
@@ -25,6 +26,7 @@ function App() {
             <Route path="/players" element={<PlayersPage />} />
             <Route path="/games" element={<GamesPage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/teams" element={<TeamsPage />} />
             <Route path="/teams/:teamId" element={<TeamStatsPage />} />
             <Route path="/team-games" element={<TeamGamesPage />} />

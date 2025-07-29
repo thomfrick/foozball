@@ -2,6 +2,7 @@
 // ABOUTME: Provides consistent data fetching and caching patterns
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { analyticsApi } from '../api/analytics'
 import { gamesApi } from '../api/games'
 import { healthApi } from '../api/health'
 import { playersApi } from '../api/players'
@@ -237,5 +238,45 @@ export const useCreateQuickTeamGame = () => {
       queryClient.invalidateQueries({ queryKey: ['teams'] })
       queryClient.invalidateQueries({ queryKey: ['players'] })
     },
+  })
+}
+
+// Rating progression hooks
+export const usePlayerRatingHistory = (
+  playerId: number,
+  params?: {
+    page?: number
+    page_size?: number
+  }
+) => {
+  return useQuery({
+    queryKey: ['players', playerId, 'rating-history', params],
+    queryFn: () => playersApi.getRatingHistory(playerId, params),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: playerId > 0,
+  })
+}
+
+export const usePlayerRatingProgression = (
+  playerId: number,
+  limit?: number
+) => {
+  return useQuery({
+    queryKey: ['players', playerId, 'rating-progression', limit],
+    queryFn: () => playersApi.getRatingProgression(playerId, limit),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: playerId > 0,
+  })
+}
+
+export const useMultiPlayerRatingProgression = (
+  playerIds: number[],
+  limit?: number
+) => {
+  return useQuery({
+    queryKey: ['analytics', 'multi-player-progression', playerIds, limit],
+    queryFn: () => analyticsApi.getMultiPlayerProgression(playerIds, limit),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: playerIds.length > 0 && playerIds.every((id) => id > 0),
   })
 }
