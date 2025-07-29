@@ -55,7 +55,7 @@ describe('Accessibility Tests', () => {
         name: '🏆 Leaderboard',
       })
       const gamesLinks = screen.getAllByRole('link', { name: '🎮 Games' })
-      const playersLinks = screen.getAllByRole('link', { name: '👥 Players' })
+      const playersLinks = screen.getAllByRole('link', { name: '🧑‍🤝‍🧑 Players' })
       const aboutLinks = screen.getAllByRole('link', { name: 'ℹ️ About' })
 
       // Get the first (main nav) links

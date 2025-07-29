@@ -1,7 +1,6 @@
 // ABOUTME: Modern leaderboard page with professional design system
 // ABOUTME: Features beautiful cards and responsive layout for competitive rankings
 
-import React from 'react'
 import Leaderboard from '../components/Leaderboard'
 
 export default function LeaderboardPage() {

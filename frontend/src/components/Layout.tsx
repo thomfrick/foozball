@@ -54,11 +54,17 @@ export default function Layout({ children }: LayoutProps) {
               <Link to="/leaderboard" className={navLinkClass('/leaderboard')}>
                 🏆 Leaderboard
               </Link>
+              <Link to="/teams" className={navLinkClass('/teams')}>
+                👥 Teams
+              </Link>
               <Link to="/games" className={navLinkClass('/games')}>
                 🎮 Games
               </Link>
+              <Link to="/team-games" className={navLinkClass('/team-games')}>
+                🤝 Team Games
+              </Link>
               <Link to="/players" className={navLinkClass('/players')}>
-                👥 Players
+                🧑‍🤝‍🧑 Players
               </Link>
               <Link to="/about" className={navLinkClass('/about')}>
                 ℹ️ About
@@ -137,6 +143,17 @@ export default function Layout({ children }: LayoutProps) {
                   🏆 Leaderboard
                 </Link>
                 <Link
+                  to="/teams"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
+                    isActive('/teams')
+                      ? 'bg-neutral-0 text-primary-600 shadow-sm'
+                      : 'text-white hover:bg-primary-700 hover:shadow-md'
+                  }`}
+                >
+                  👥 Teams
+                </Link>
+                <Link
                   to="/games"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
@@ -148,6 +165,17 @@ export default function Layout({ children }: LayoutProps) {
                   🎮 Games
                 </Link>
                 <Link
+                  to="/team-games"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
+                    isActive('/team-games')
+                      ? 'bg-neutral-0 text-primary-600 shadow-sm'
+                      : 'text-white hover:bg-primary-700 hover:shadow-md'
+                  }`}
+                >
+                  🤝 Team Games
+                </Link>
+                <Link
                   to="/players"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`block px-4 py-3 rounded-lg text-base font-semibold transition-all duration-200 ${
@@ -156,7 +184,7 @@ export default function Layout({ children }: LayoutProps) {
                       : 'text-white hover:bg-primary-700 hover:shadow-md'
                   }`}
                 >
-                  👥 Players
+                  🧑‍🤝‍🧑 Players
                 </Link>
                 <Link
                   to="/about"
@@ -217,6 +245,15 @@ export default function Layout({ children }: LayoutProps) {
                 </li>
                 <li>
                   <Link
+                    to="/teams"
+                    className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span>👥</span>
+                    <span>Teams</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/games"
                     className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
                   >
@@ -226,10 +263,19 @@ export default function Layout({ children }: LayoutProps) {
                 </li>
                 <li>
                   <Link
+                    to="/team-games"
+                    className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span>🤝</span>
+                    <span>Team Games</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/players"
                     className="text-neutral-400 hover:text-primary-300 transition-colors duration-200 flex items-center gap-2"
                   >
-                    <span>👥</span>
+                    <span>🧑‍🤝‍🧑</span>
                     <span>Players</span>
                   </Link>
                 </li>

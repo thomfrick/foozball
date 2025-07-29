@@ -1,7 +1,6 @@
 // ABOUTME: Leaderboard component displaying players ranked by TrueSkill rating
 // ABOUTME: Shows player rankings with TrueSkill mu, sigma, and conservative rating
 
-import React from 'react'
 import { usePlayers } from '../hooks/useApi'
 import type { Player } from '../types/player'
 import { LoadingSkeleton } from './LoadingSpinner'

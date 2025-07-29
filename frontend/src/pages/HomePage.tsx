@@ -26,15 +26,25 @@ export default function HomePage() {
             </p>
 
             {/* Quick Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link to="/leaderboard">
                 <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 min-w-[200px]">
                   🏆 View Leaderboard
                 </button>
               </Link>
+              <Link to="/team-games">
+                <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 min-w-[200px]">
+                  🤝 Record Team Game
+                </button>
+              </Link>
+              <Link to="/teams">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 min-w-[200px]">
+                  👥 View Teams
+                </button>
+              </Link>
               <Link to="/players">
                 <button className="bg-white hover:bg-gray-100 text-blue-600 font-bold py-4 px-8 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 min-w-[200px]">
-                  👥 Manage Players
+                  🧑‍🤝‍🧑 Manage Players
                 </button>
               </Link>
             </div>

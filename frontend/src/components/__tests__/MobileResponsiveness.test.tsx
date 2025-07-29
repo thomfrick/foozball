@@ -133,7 +133,7 @@ describe('Mobile Responsiveness', () => {
 
       // Menu items should become visible (using getAllByText to handle duplicates)
       const homeLinks = screen.getAllByText('Home')
-      const playersLinks = screen.getAllByText('👥 Players')
+      const playersLinks = screen.getAllByText('🧑‍🤝‍🧑 Players')
       const leaderboardLinks = screen.getAllByText('🏆 Leaderboard')
 
       expect(homeLinks.length).toBeGreaterThan(0)

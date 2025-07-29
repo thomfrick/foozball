@@ -10,6 +10,10 @@ import HomePage from './pages/HomePage'
 import LeaderboardPage from './pages/LeaderboardPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PlayersPage from './pages/PlayersPage'
+import TeamGameHistoryPage from './pages/TeamGameHistoryPage'
+import TeamGamesPage from './pages/TeamGamesPage'
+import TeamsPage from './pages/TeamsPage'
+import TeamStatsPage from './pages/TeamStatsPage'
 
 function App() {
   return (
@@ -21,6 +25,13 @@ function App() {
             <Route path="/players" element={<PlayersPage />} />
             <Route path="/games" element={<GamesPage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/teams/:teamId" element={<TeamStatsPage />} />
+            <Route path="/team-games" element={<TeamGamesPage />} />
+            <Route
+              path="/team-games/history"
+              element={<TeamGameHistoryPage />}
+            />
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

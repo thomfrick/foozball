@@ -70,9 +70,24 @@ export default function Card({
   const variantClasses = cardVariants[variant]
   const paddingClasses = cardPadding[padding]
 
+  // Add accessibility attributes for clickable cards
+  const accessibilityProps = clickable
+    ? {
+        role: 'button',
+        tabIndex: 0,
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if ((e.key === 'Enter' || e.key === ' ') && props.onClick) {
+            e.preventDefault()
+            props.onClick(e as React.MouseEvent<HTMLDivElement>)
+          }
+        },
+      }
+    : {}
+
   return (
     <div
       className={`${baseClasses} ${variantClasses} ${paddingClasses} ${className}`}
+      {...accessibilityProps}
       {...props}
     >
       {children}
@@ -312,6 +327,184 @@ export function GameCard({
         <div className="text-right">
           <div className="text-sm font-medium text-success-600 dark:text-success-400">
             {game.winner_name} wins
+          </div>
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+export function TeamCard({
+  team,
+  onClick,
+  actions,
+  showRating = true,
+  className = '',
+}: {
+  team: {
+    id: number
+    player_names: string
+    player1: { name: string }
+    player2: { name: string }
+    trueskill_mu: number
+    trueskill_sigma: number
+    conservative_rating: number
+    games_played: number
+    win_percentage: number
+    wins: number
+    losses: number
+  }
+  onClick?: () => void
+  actions?: React.ReactNode
+  showRating?: boolean
+  className?: string
+}) {
+  const getUncertaintyLevel = (sigma: number) => {
+    if (sigma > 6)
+      return { level: 'High', color: 'text-amber-600 dark:text-amber-400' }
+    if (sigma > 4)
+      return { level: 'Medium', color: 'text-blue-600 dark:text-blue-400' }
+    return { level: 'Low', color: 'text-success-600 dark:text-success-400' }
+  }
+
+  const uncertainty = getUncertaintyLevel(team.trueskill_sigma)
+
+  return (
+    <Card
+      variant="default"
+      hover
+      clickable={!!onClick}
+      onClick={onClick}
+      className={className}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          {/* Team Avatar */}
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-r from-primary-100 to-secondary-100 dark:from-primary-900/20 dark:to-secondary-900/20 rounded-full flex items-center justify-center">
+              <span className="text-lg font-bold text-primary-600 dark:text-primary-400">
+                👥
+              </span>
+            </div>
+          </div>
+
+          {/* Team Info */}
+          <div>
+            <h3 className="font-semibold text-neutral-900 dark:text-dark-text">
+              {team.player1.name} & {team.player2.name}
+            </h3>
+            <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+              <span>{team.games_played} games</span>
+              <span>•</span>
+              <span>{team.win_percentage.toFixed(1)}% wins</span>
+              <span>•</span>
+              <span>
+                {team.wins}W-{team.losses}L
+              </span>
+            </div>
+            {showRating && (
+              <div className="flex items-center gap-2 mt-1">
+                <div className="text-sm">
+                  <span className="font-medium text-neutral-700 dark:text-neutral-300">
+                    Rating: {team.conservative_rating.toFixed(1)}
+                  </span>
+                </div>
+                <div
+                  className={`text-xs px-2 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 ${uncertainty.color}`}
+                  title={`Uncertainty: ${team.trueskill_sigma.toFixed(1)} (${uncertainty.level})`}
+                >
+                  {uncertainty.level}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Actions */}
+        {actions && (
+          <div className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+            {actions}
+          </div>
+        )}
+      </div>
+    </Card>
+  )
+}
+
+export function TeamGameCard({
+  teamGame,
+  onClick,
+  className = '',
+}: {
+  teamGame: {
+    id: number
+    team1: {
+      player1: { name: string }
+      player2: { name: string }
+    }
+    team2: {
+      player1: { name: string }
+      player2: { name: string }
+    }
+    winner_team: {
+      player1: { name: string }
+      player2: { name: string }
+    }
+    created_at: string
+  }
+  onClick?: () => void
+  className?: string
+}) {
+  const isTeam1Winner =
+    teamGame.winner_team.player1.name === teamGame.team1.player1.name
+
+  return (
+    <Card
+      variant="default"
+      hover
+      clickable={!!onClick}
+      onClick={onClick}
+      className={className}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="text-2xl">👥</div>
+          <div>
+            <div className="flex items-center gap-3 text-sm">
+              <div className="text-center">
+                <div
+                  className={`font-medium ${
+                    isTeam1Winner
+                      ? 'text-success-600 dark:text-success-400'
+                      : 'text-neutral-600 dark:text-neutral-400'
+                  }`}
+                >
+                  {teamGame.team1.player1.name} & {teamGame.team1.player2.name}
+                </div>
+              </div>
+              <span className="text-neutral-400 font-bold">vs</span>
+              <div className="text-center">
+                <div
+                  className={`font-medium ${
+                    !isTeam1Winner
+                      ? 'text-success-600 dark:text-success-400'
+                      : 'text-neutral-600 dark:text-neutral-400'
+                  }`}
+                >
+                  {teamGame.team2.player1.name} & {teamGame.team2.player2.name}
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+              {new Date(teamGame.created_at).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+
+        <div className="text-right">
+          <div className="text-sm font-medium text-success-600 dark:text-success-400">
+            {teamGame.winner_team.player1.name} &{' '}
+            {teamGame.winner_team.player2.name} win
           </div>
         </div>
       </div>
