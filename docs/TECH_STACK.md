@@ -42,11 +42,17 @@
 - **Error Boundaries** - Enhanced error handling with user-friendly recovery mechanisms
 
 ### State Management & API
-- **TanStack Query (React Query)** - Server state management and caching
+- **TanStack Query v5 (React Query)** - Server state management and caching with modern API
 - **React Hook Form** - Performant forms with easy validation
 
-### Data Visualization
-- **Recharts** - React charting library for TrueSkill progression graphs and statistics
+### Data Visualization & Analytics
+- **Recharts** - React charting library for interactive data visualization
+  - Rating Progression Charts
+  - Win/Loss Streak Charts
+  - Multi-Player Comparison Charts
+  - Team Rating Charts
+- **Advanced Statistics Dashboard** - Comprehensive analytics with head-to-head analysis
+- **Enhanced Leaderboard** - Professional ranking with filtering and pagination
 
 ### Testing
 - **Vitest** - Fast unit testing (Vite-native)

@@ -39,7 +39,7 @@ class ApiClient {
 
       // Handle empty responses (like 204 No Content)
       if (response.status === 204) {
-        return null
+        return null as T
       }
 
       return response.json()

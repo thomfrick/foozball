@@ -150,18 +150,18 @@ const WinLossStreakChart: React.FC<WinLossStreakChartProps> = ({
             Game #{label}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {data.date}
+            {data.date as string}
           </p>
           <p className="text-sm text-gray-700 dark:text-gray-300">
-            vs {data.opponent}
+            vs {data.opponent as string}
           </p>
           <p
             className="text-sm font-medium"
             style={{
-              color: data.streak > 0 ? '#10b981' : '#ef4444',
+              color: (data.streak as number) > 0 ? '#10b981' : '#ef4444',
             }}
           >
-            {data.result} - {streakText}
+            {data.result as string} - {streakText}
           </p>
         </div>
       )

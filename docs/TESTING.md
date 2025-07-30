@@ -8,7 +8,7 @@ Comprehensive testing infrastructure with unit, integration, and end-to-end test
 # Backend tests (119+ tests total)
 uv run --directory backend pytest tests/ -v
 
-# Frontend tests (393+ tests total)
+# Frontend tests (521+ tests total)
 npm run test:run --prefix frontend
 
 # End-to-End tests (requires services running)
@@ -22,7 +22,7 @@ npm run test:coverage --prefix frontend
 ## 📊 Test Coverage Overview
 
 - **Backend**: 119+ tests (unit + integration + TrueSkill + health endpoints + error scenarios)
-- **Frontend**: 393+ tests (unit + integration with MSW + UI design system + accessibility + responsive + mobile)
+- **Frontend**: 521+ tests (unit + integration with MSW + UI design system + accessibility + responsive + mobile + statistics + analytics)
 - **E2E**: Playwright tests with isolated project structure
 - **Total Coverage**: Database, API, UI, TrueSkill, design system, theme management, error boundaries, health monitoring, security, performance, concurrency, accessibility
 

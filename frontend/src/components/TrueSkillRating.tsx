@@ -1,7 +1,6 @@
 // ABOUTME: Reusable component for displaying TrueSkill ratings with tooltips
 // ABOUTME: Shows mu, sigma, conservative rating, and uncertainty indicators
 
-import React from 'react'
 import type { Player } from '../types/player'
 
 interface TrueSkillRatingProps {

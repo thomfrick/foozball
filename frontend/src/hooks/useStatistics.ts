@@ -1,7 +1,8 @@
 // ABOUTME: React Query hooks for enhanced statistics data management
 // ABOUTME: Provides hooks for fetching and caching statistics, leaderboard, and player performance data
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import type { UseQueryOptions } from '@tanstack/react-query'
 import { statisticsApi } from '../api/statistics'
 import type {
   EnhancedLeaderboardResponse,
@@ -62,7 +63,7 @@ export const useEnhancedLeaderboard = (
     queryKey: ['statistics', 'leaderboard', params],
     queryFn: () => statisticsApi.getLeaderboard(params),
     staleTime: 1 * 60 * 1000, // 1 minute
-    keepPreviousData: true, // For pagination
+    placeholderData: keepPreviousData, // For pagination
     ...options,
   })
 }
