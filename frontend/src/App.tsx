@@ -11,6 +11,7 @@ import HomePage from './pages/HomePage'
 import LeaderboardPage from './pages/LeaderboardPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PlayersPage from './pages/PlayersPage'
+import { StatisticsDashboard } from './pages/StatisticsDashboard'
 import TeamGameHistoryPage from './pages/TeamGameHistoryPage'
 import TeamGamesPage from './pages/TeamGamesPage'
 import TeamsPage from './pages/TeamsPage'
@@ -26,6 +27,7 @@ function App() {
             <Route path="/players" element={<PlayersPage />} />
             <Route path="/games" element={<GamesPage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
+            <Route path="/statistics" element={<StatisticsDashboard />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/teams" element={<TeamsPage />} />
             <Route path="/teams/:teamId" element={<TeamStatsPage />} />
