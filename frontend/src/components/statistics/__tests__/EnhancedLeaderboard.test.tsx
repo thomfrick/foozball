@@ -2,6 +2,7 @@
 // ABOUTME: Validates leaderboard display, filtering, sorting, and player interactions
 
 import { fireEvent, render, screen } from '@testing-library/react'
+import { vi } from 'vitest'
 import type { EnhancedLeaderboardResponse } from '../../../types/statistics'
 import { EnhancedLeaderboard } from '../EnhancedLeaderboard'
 
@@ -65,18 +66,18 @@ const mockLeaderboardData: EnhancedLeaderboardResponse = {
   last_updated: '2025-07-29T15:30:00Z',
 }
 
-const mockOnPlayerSelect = jest.fn()
+const mockOnPlayerSelect = vi.fn()
 
 describe('EnhancedLeaderboard', () => {
   beforeEach(() => {
-    mockOnPlayerSelect.mockClear()
+    mockOnPlayerSelect.mockReset()
   })
 
   it('renders loading state correctly', () => {
     render(<EnhancedLeaderboard loading={true} />)
 
     expect(screen.getByText('🏆 Enhanced Leaderboard')).toBeInTheDocument()
-    expect(screen.getAllByRole('generic')).toHaveLength(expect.any(Number)) // Loading skeletons
+    expect(screen.getAllByRole('generic').length).toBeGreaterThan(0) // Loading skeletons
   })
 
   it('renders error state correctly', () => {
@@ -192,8 +193,8 @@ describe('EnhancedLeaderboard', () => {
     expect(screen.getByText('3 games this week')).toBeInTheDocument() // Bob
     expect(screen.getByText('2 games this week')).toBeInTheDocument() // Charlie
 
-    // Check last game dates
-    expect(screen.getByText(/Last:/)).toBeInTheDocument()
+    // Check last game dates (multiple players have last game dates)
+    expect(screen.getAllByText(/Last:/).length).toBeGreaterThan(0)
   })
 
   it('shows empty state when no players', () => {

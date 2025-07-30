@@ -2,6 +2,7 @@
 // ABOUTME: Validates tab navigation, data integration, and dashboard functionality
 
 import { fireEvent, render, screen } from '@testing-library/react'
+import { vi } from 'vitest'
 import {
   useEnhancedLeaderboard,
   useStatisticsSummary,
@@ -9,15 +10,12 @@ import {
 import { StatisticsDashboard } from '../../../pages/StatisticsDashboard'
 
 // Mock the statistics hooks
-jest.mock('../../../hooks/useStatistics')
-const mockUseStatisticsSummary = useStatisticsSummary as jest.MockedFunction<
-  typeof useStatisticsSummary
->
-const mockUseEnhancedLeaderboard =
-  useEnhancedLeaderboard as jest.MockedFunction<typeof useEnhancedLeaderboard>
+vi.mock('../../../hooks/useStatistics')
+const mockUseStatisticsSummary = vi.mocked(useStatisticsSummary)
+const mockUseEnhancedLeaderboard = vi.mocked(useEnhancedLeaderboard)
 
 // Mock child components to focus on dashboard logic
-jest.mock('../StatsSummaryCard', () => ({
+vi.mock('../StatsSummaryCard', () => ({
   StatsSummaryCard: ({
     summary,
     loading,
@@ -39,7 +37,7 @@ jest.mock('../StatsSummaryCard', () => ({
   ),
 }))
 
-jest.mock('../EnhancedLeaderboard', () => ({
+vi.mock('../EnhancedLeaderboard', () => ({
   EnhancedLeaderboard: ({
     data,
     loading,
@@ -67,7 +65,7 @@ jest.mock('../EnhancedLeaderboard', () => ({
   ),
 }))
 
-jest.mock('../PlayerStatisticsPanel', () => ({
+vi.mock('../PlayerStatisticsPanel', () => ({
   PlayerStatisticsPanel: ({
     selectedPlayerId,
     onPlayerSelect,
@@ -89,7 +87,7 @@ jest.mock('../PlayerStatisticsPanel', () => ({
   ),
 }))
 
-jest.mock('../HeadToHeadComparison', () => ({
+vi.mock('../HeadToHeadComparison', () => ({
   HeadToHeadComparison: ({
     leaderboardData,
   }: {
@@ -192,17 +190,17 @@ describe('StatisticsDashboard', () => {
   it('renders all dashboard tabs', () => {
     render(<StatisticsDashboard />)
 
-    expect(screen.getByText('📊 Overview')).toBeInTheDocument()
-    expect(screen.getByText('🏆 Enhanced Leaderboard')).toBeInTheDocument()
-    expect(screen.getByText('👤 Player Statistics')).toBeInTheDocument()
-    expect(screen.getByText('⚔️ Head-to-Head')).toBeInTheDocument()
+    expect(screen.getByText('Overview')).toBeInTheDocument()
+    expect(screen.getByText('Enhanced Leaderboard')).toBeInTheDocument()
+    expect(screen.getByText('Player Statistics')).toBeInTheDocument()
+    expect(screen.getByText('Head-to-Head')).toBeInTheDocument()
   })
 
   it('starts with overview tab active', () => {
     render(<StatisticsDashboard />)
 
     // Overview tab should be active (has blue color classes)
-    const overviewTab = screen.getByText('📊 Overview').closest('button')
+    const overviewTab = screen.getByText('Overview').closest('button')
     expect(overviewTab).toHaveClass('border-blue-500', 'text-blue-600')
 
     // Overview content should be visible
@@ -213,21 +211,21 @@ describe('StatisticsDashboard', () => {
     render(<StatisticsDashboard />)
 
     // Click on Enhanced Leaderboard tab
-    fireEvent.click(screen.getByText('🏆 Enhanced Leaderboard'))
+    fireEvent.click(screen.getByText('Enhanced Leaderboard'))
 
     // Enhanced Leaderboard content should be visible
     expect(screen.getByTestId('enhanced-leaderboard')).toBeInTheDocument()
     expect(screen.queryByTestId('stats-summary-card')).not.toBeInTheDocument()
 
     // Click on Player Statistics tab
-    fireEvent.click(screen.getByText('👤 Player Statistics'))
+    fireEvent.click(screen.getByText('Player Statistics'))
 
     // Player Statistics content should be visible
     expect(screen.getByTestId('player-statistics-panel')).toBeInTheDocument()
     expect(screen.queryByTestId('enhanced-leaderboard')).not.toBeInTheDocument()
 
     // Click on Head-to-Head tab
-    fireEvent.click(screen.getByText('⚔️ Head-to-Head'))
+    fireEvent.click(screen.getByText('Head-to-Head'))
 
     // Head-to-Head content should be visible
     expect(screen.getByTestId('head-to-head-comparison')).toBeInTheDocument()
@@ -261,14 +259,14 @@ describe('StatisticsDashboard', () => {
     render(<StatisticsDashboard />)
 
     // Switch to leaderboard tab
-    fireEvent.click(screen.getByText('🏆 Enhanced Leaderboard'))
+    fireEvent.click(screen.getByText('Enhanced Leaderboard'))
     expect(screen.getByTestId('enhanced-leaderboard')).toBeInTheDocument()
 
     // Click select player button
     fireEvent.click(screen.getByText('Select Player 1'))
 
     // Switch to player statistics tab
-    fireEvent.click(screen.getByText('👤 Player Statistics'))
+    fireEvent.click(screen.getByText('Player Statistics'))
 
     // Should show selected player
     expect(screen.getByText('Selected Player ID: 1')).toBeInTheDocument()
@@ -278,7 +276,7 @@ describe('StatisticsDashboard', () => {
     render(<StatisticsDashboard />)
 
     // Switch to player statistics tab
-    fireEvent.click(screen.getByText('👤 Player Statistics'))
+    fireEvent.click(screen.getByText('Player Statistics'))
 
     // Click select player button in panel
     fireEvent.click(screen.getByText('Select Player 2'))
@@ -291,11 +289,11 @@ describe('StatisticsDashboard', () => {
     render(<StatisticsDashboard />)
 
     // Switch to player statistics tab
-    fireEvent.click(screen.getByText('👤 Player Statistics'))
+    fireEvent.click(screen.getByText('Player Statistics'))
     expect(screen.getByText('Leaderboard available')).toBeInTheDocument()
 
     // Switch to head-to-head tab
-    fireEvent.click(screen.getByText('⚔️ Head-to-Head'))
+    fireEvent.click(screen.getByText('Head-to-Head'))
     expect(screen.getByText('Leaderboard data provided')).toBeInTheDocument()
   })
 
@@ -326,7 +324,7 @@ describe('StatisticsDashboard', () => {
     expect(screen.getByText('Loading summary...')).toBeInTheDocument()
 
     // Switch to leaderboard tab
-    fireEvent.click(screen.getByText('🏆 Enhanced Leaderboard'))
+    fireEvent.click(screen.getByText('Enhanced Leaderboard'))
     expect(screen.getByText('Loading leaderboard...')).toBeInTheDocument()
   })
 
@@ -348,7 +346,7 @@ describe('StatisticsDashboard', () => {
     expect(screen.getByText('Error loading summary')).toBeInTheDocument()
 
     // Switch to leaderboard tab
-    fireEvent.click(screen.getByText('🏆 Enhanced Leaderboard'))
+    fireEvent.click(screen.getByText('Enhanced Leaderboard'))
     expect(screen.getByText('Error loading leaderboard')).toBeInTheDocument()
   })
 
@@ -356,16 +354,16 @@ describe('StatisticsDashboard', () => {
     render(<StatisticsDashboard />)
 
     // Select player from leaderboard
-    fireEvent.click(screen.getByText('🏆 Enhanced Leaderboard'))
+    fireEvent.click(screen.getByText('Enhanced Leaderboard'))
     fireEvent.click(screen.getByText('Select Player 1'))
 
     // Switch to player statistics
-    fireEvent.click(screen.getByText('👤 Player Statistics'))
+    fireEvent.click(screen.getByText('Player Statistics'))
     expect(screen.getByText('Selected Player ID: 1')).toBeInTheDocument()
 
     // Switch back to leaderboard and back to player stats
-    fireEvent.click(screen.getByText('🏆 Enhanced Leaderboard'))
-    fireEvent.click(screen.getByText('👤 Player Statistics'))
+    fireEvent.click(screen.getByText('Enhanced Leaderboard'))
+    fireEvent.click(screen.getByText('Player Statistics'))
 
     // Player selection should persist
     expect(screen.getByText('Selected Player ID: 1')).toBeInTheDocument()

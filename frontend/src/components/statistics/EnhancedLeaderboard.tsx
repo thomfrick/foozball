@@ -6,8 +6,8 @@ import type {
   EnhancedLeaderboardResponse,
   LeaderboardParams,
 } from '../../types/statistics'
-import { Button } from '../ui/Button'
-import { Card } from '../ui/Card'
+import Button from '../ui/Button'
+import Card from '../ui/Card'
 
 interface EnhancedLeaderboardProps {
   data?: EnhancedLeaderboardResponse

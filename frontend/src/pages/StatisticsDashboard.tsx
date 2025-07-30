@@ -6,7 +6,7 @@ import { EnhancedLeaderboard } from '../components/statistics/EnhancedLeaderboar
 import { HeadToHeadComparison } from '../components/statistics/HeadToHeadComparison'
 import { PlayerStatisticsPanel } from '../components/statistics/PlayerStatisticsPanel'
 import { StatsSummaryCard } from '../components/statistics/StatsSummaryCard'
-import { Card } from '../components/ui/Card'
+import Card from '../components/ui/Card'
 import {
   useEnhancedLeaderboard,
   useStatisticsSummary,
